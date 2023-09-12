@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Spectrum Page</title>
+</head>
+<body>
+<h1>Spectrum Details</h1>
+
+
+{{with .Spectrum}}
+<div class="spectrum-card">
+    <img class="spectrum-img" src="/resources/{{.Image}}" alt="{{.Name}}">
+    <h3>{{.Name}}</h3>
+
+    <span>Описание спектра:</span>
+    <p>{{.Description}}</p>
+    <a href="/">На главную</a>
+</div>
+{{end}}
+
+
+</body>
+</html>
+
