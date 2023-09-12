@@ -62,7 +62,7 @@ func StartServer() {
 	//
 	//	c.HTML(http.StatusOK, "index.html", gin.H{
 	//		"Planets": filteredPlanets,
-	//	})
+	//	})csdcsdcsdc
 	//})
 
 	r.Run(":8080")
