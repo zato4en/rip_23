@@ -1,17 +1,30 @@
+body {
+    background-color: rgba(0, 0, 0, 0.64);
+}
+
 .card {
     border: 1px solid #ccc;
     padding: 10px;
     margin-bottom: 10px;
-    width: 20%;
+    width: 95%;
+    float: left;
+    margin: 20px;
+    border-radius: 2%;
+    background-color: black;
+    color: white;
 }
 
 .card img {
-    width: 100%;
+    width: 15%;
     height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .card h3 {
     margin-top: 10px;
+    text-align: center;
 }
 
 .card p {
@@ -21,11 +34,12 @@
 .card a {
     display: block;
     text-align: center;
-    background-color: #ccc;
-    color: #fff;
+    background-color: rgba(221, 0, 255, 0.56);
+    color: white;
     padding: 5px;
     text-decoration: none;
     border-radius: 5px;
     width: 100px;
     margin: 0 auto;
 }
+

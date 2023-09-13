@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"rip2023"
 	"strconv"
+	"strings"
 )
 
 func StartServer() {
@@ -14,9 +15,7 @@ func StartServer() {
 	r.Static("/resources", "./resources")
 	r.Static("/static", "./static")
 
-	r.SetHTMLTemplate(template.Must(template.ParseFiles("./templates/mainpage.html")))
-
-	spectra := []rip2023.Spectrum{
+	Spectrums := []rip2023.Spectrum{
 		{1, "Космический микроволновый фон (CMB)", []float32{1, 2, 3}, "представляет собой радиацию с длиной волны около 1 мм (миллиметра). CMB является самым ранним излучением, которое мы можем наблюдать, и его спектр соответствует температуре около 2.7 Кельвина.\n",
 			"relict.jpeg"},
 		{2, "Инфракрасное реликтовое излучение (IRB)", []float32{1, 2, 3}, "соответствует длинам волн от 1 мм до 1 микрометра. IRB связано с тепловым излучением, испускаемым пылью и газом в галактиках.\n",
@@ -26,8 +25,9 @@ func StartServer() {
 	}
 
 	r.GET("/", func(c *gin.Context) {
+		r.SetHTMLTemplate(template.Must(template.ParseFiles("./templates/mainpage.html")))
 		c.HTML(http.StatusOK, "mainpage.html", gin.H{
-			"spectra": spectra,
+			"Spectrum": Spectrums,
 		})
 	})
 
@@ -37,7 +37,7 @@ func StartServer() {
 
 		var selectedSpectrum rip2023.Spectrum
 
-		for _, Spectrum := range spectra {
+		for _, Spectrum := range Spectrums {
 			if strconv.Itoa(Spectrum.ID) == id {
 				selectedSpectrum = Spectrum
 				break
@@ -50,20 +50,20 @@ func StartServer() {
 		})
 	})
 
-	//r.GET("/search", func(c *gin.Context) {
-	//	searchQuery := c.Query("search")
-	//
-	//	filteredPlanets := []backend.Planets{}
-	//	for _, planet := range Planets {
-	//		if strings.Contains(strings.ToLower(planet.Name), strings.ToLower(searchQuery)) {
-	//			filteredPlanets = append(filteredPlanets, planet)
-	//		}
-	//	}
-	// cccc
-	//	c.HTML(http.StatusOK, "index.html", gin.H{
-	//		"Planets": filteredPlanets,
-	//	})csdcsdcsdc
-	//})
+	r.GET("/search", func(c *gin.Context) {
+		searchQuery := c.Query("search")
+
+		filteredSpectrum := []rip2023.Spectrum{}
+		for _, c := range Spectrums {
+			if strings.Contains(strings.ToLower(c.Name), strings.ToLower(searchQuery)) {
+				filteredSpectrum = append(filteredSpectrum, c)
+			}
+		}
+
+		c.HTML(http.StatusOK, "mainpage.html", gin.H{
+			"Spectrum": filteredSpectrum,
+		})
+	})
 
 	r.Run(":8080")
 }

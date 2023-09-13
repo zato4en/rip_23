@@ -9,7 +9,13 @@
     <title>Document</title>
 </head>
 <body>
-{{range .spectra}}
+
+<form action="/search" method="GET">
+    <input type="text" name="search" placeholder="Поиск по названию">
+    <button type="submit">Поиск</button>
+</form>
+
+{{range .Spectrum}}
 <div class="card">
     <img src="/resources/{{.Image}}" alt="{{.Name}}">
     <h3>{{.Name}}</h3>

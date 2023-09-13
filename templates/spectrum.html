@@ -2,23 +2,26 @@
 <html>
 <head>
     <title>Spectrum Page</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+    <style>
+        body {
+            background-color: #333333;
+            color: white;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        }
+    </style>
 </head>
 <body>
-<h1>Spectrum Details</h1>
-
-
-{{with .Spectrum}}
-<div class="spectrum-card">
-    <img class="spectrum-img" src="/resources/{{.Image}}" alt="{{.Name}}">
-    <h3>{{.Name}}</h3>
-
-    <span>Описание спектра:</span>
-    <p>{{.Description}}</p>
-    <a href="/">На главную</a>
+<div class="container">
+    <h1>Описание спектра</h1>
+    {{with .Spectrum}}
+    <div class="spectrum-card">
+        <img class="spectrum-img" src="/resources/{{.Image}}" alt="{{.Name}}">
+        <h3>{{.Name}}</h3>
+        <p>{{.Description}}</p>
+        <a href="/" class="btn">На главную</a>
+    </div>
+    {{end}}
 </div>
-{{end}}
-
-
 </body>
 </html>
-
