@@ -9,11 +9,13 @@
     <title>Document</title>
 </head>
 <body>
+<h1 style="text-align: center;">Анализ реликтового излучения</h1>
 
-<form action="/search" method="GET">
+<form action="/" method="GET">
     <input type="text" name="search" placeholder="Поиск по названию">
     <button type="submit">Поиск</button>
 </form>
+
 
 {{range .Spectrum}}
 <div class="card">

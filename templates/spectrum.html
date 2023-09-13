@@ -5,23 +5,29 @@
     <link rel="stylesheet" type="text/css" href="/static/css/style.css">
     <style>
         body {
-            background-color: #333333;
+            background-color: black;
             color: white;
             font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
         }
     </style>
 </head>
 <body>
-<div class="container">
-    <h1>Описание спектра</h1>
-    {{with .Spectrum}}
-    <div class="spectrum-card">
-        <img class="spectrum-img" src="/resources/{{.Image}}" alt="{{.Name}}">
-        <h3>{{.Name}}</h3>
-        <p>{{.Description}}</p>
-        <a href="/" class="btn">На главную</a>
-    </div>
-    {{end}}
+
+
+<div class="header">
+<h1>Описание спектра</h1>
+</div>
+
+{{with .Spectrum}}
+<div class="spectrum-card">
+    <img class="spectrum-img" src="/resources/{{.Image}}" alt="{{.Name}}">
+    <h3>{{.Name}}</h3>
+    <p>{{.Description}}</p>
+    <p>Вы сможете подать заявку на анализ позже</p>
+    <a href="/" class="btn">Вернуться к выбору спектра</a>
+
+{{end}}
+
 </div>
 </body>
 </html>
