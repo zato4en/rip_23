@@ -1,18 +1,18 @@
-version: "2.15.1"
+version: "3.8"
 services:
   db:
     image: postgres:12
-    volumes:
-      - type: volume
-        source: postgresdb-data
-        target: /Users/zato4en/Library/Application\Support/Postgres/var-15
+#    volumes:
+#      - type: volume
+#        source: postgresdb-data
+#        target: /var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "${DB_PORT}:5432"
     environment:
-      POSTGRES_USER: zato4en
-      POSTGRES_DB: bmstu
-      POSTGRES_PASSWORD: akashow1
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_PASSWORD: ${DB_PASS}
 
-volumes:
-  postgresdb-data:
-    driver: local
+#volumes:
+#  postgresdb-data:
+#    driver: local
