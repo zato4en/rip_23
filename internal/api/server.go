@@ -46,7 +46,7 @@ func StartServer() {
 		})
 	})
 
-	//авав
+	//ававд
 	r.GET("/Spectrum/:id", func(c *gin.Context) {
 		r.SetHTMLTemplate(template.Must(template.ParseFiles("./templates/spectrum.html")))
 		id := c.Param("id")
