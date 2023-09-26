@@ -15,7 +15,7 @@ func (h *Handler) SpectrumList(ctx *gin.Context) {
 			})
 			return
 		}
-		ctx.HTML(http.StatusOK, "index.html", gin.H{
+		ctx.HTML(http.StatusOK, "mainpage.html", gin.H{
 			"Spectrum": Spectrum,
 		})
 	} else {
@@ -24,7 +24,7 @@ func (h *Handler) SpectrumList(ctx *gin.Context) {
 		if err != nil {
 			// обработка ошибки
 		}
-		ctx.HTML(http.StatusOK, "index.html", gin.H{
+		ctx.HTML(http.StatusOK, "mainpage.html", gin.H{
 			"Spectrum": filteredSpectrum,
 		})
 
@@ -40,7 +40,7 @@ func (h *Handler) SpectrumById(ctx *gin.Context) {
 		})
 		return
 	}
-	ctx.HTML(http.StatusOK, "info.html", gin.H{
+	ctx.HTML(http.StatusOK, "spectrum.html", gin.H{
 		"Spectrum": Spectrum,
 	})
 }

@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"github.com/zato4en/rip_23/internal/app/ds"
+	"rip2023/internal/app/ds"
 	"strconv"
 	"strings"
 )
@@ -18,7 +18,7 @@ func (r *Repository) SearchSpectrum(search string) (*[]ds.Spectrum, error) {
 
 	var filteredSpectrum []ds.Spectrum
 	for _, Spectrum := range Spectrum {
-		if strings.Contains(strings.ToLower(Spectrum.Name), strings.ToLower(search)) {
+		if strings.Contains(strings.ToLower(Spectrum.Description), strings.ToLower(search)) {
 			filteredSpectrum = append(filteredSpectrum, Spectrum)
 		}
 	}
@@ -34,6 +34,6 @@ func (r *Repository) SpectrumById(id string) (*ds.Spectrum, error) {
 }
 
 func (r *Repository) DeleteSpectrum(id string) {
-	query := "UPDATE Spectrum SET is_delete = true WHERE id = $1"
+	query := "UPDATE Spectrums SET is_delete = true WHERE id = $1"
 	r.db.Exec(query, id)
 }

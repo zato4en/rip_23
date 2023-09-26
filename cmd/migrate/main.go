@@ -19,9 +19,9 @@ func main() {
 		panic("failed to connect database")
 	}
 	if err := db.AutoMigrate(
-		&ds.Planet{},
-		&ds.FlightRequest{},
-		&ds.PlanetsRequest{},
+		&ds.Spectrum{},
+		&ds.AnalysisRequest{},
+		&ds.SpectrumRequest{},
 		&ds.Users{},
 	); err != nil {
 		panic("cant migrate db:" + err.Error())
