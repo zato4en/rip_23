@@ -7,6 +7,7 @@ import (
 
 type AnalysisRequest struct {
 	gorm.Model
+	DateSend  time.Time `json:"date_send"`
 	DateStart time.Time `json:"date_start"`
 	DateEnd   time.Time `json:"date_end"`
 	Status    string    `gorm:"type:varchar(255)" json:"status"`

@@ -6,8 +6,8 @@ import (
 )
 
 func (h *Handler) SpectrumList(ctx *gin.Context) {
-	searchQuery := ctx.Query("search")
-	if searchQuery == "" {
+	spectrumName := ctx.Query("search")
+	if spectrumName == "" {
 		Spectrum, err := h.Repository.SpectrumList()
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, gin.H{
@@ -20,7 +20,7 @@ func (h *Handler) SpectrumList(ctx *gin.Context) {
 		})
 	} else {
 
-		filteredSpectrum, err := h.Repository.SearchSpectrum(searchQuery)
+		filteredSpectrum, err := h.Repository.SearchSpectrum(spectrumName)
 		if err != nil {
 			// обработка ошибки
 		}
