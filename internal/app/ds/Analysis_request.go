@@ -13,5 +13,6 @@ type AnalysisRequest struct {
 	Status    string    `gorm:"type:varchar(255)" json:"status"`
 	Satellite string    `gorm:"type:varchar(255)" json:"satellite"`
 	UserID    uint      `json:"-"`
+	ModerID   uint      `json:"-"`
 	User      Users     `gorm:"foreignKey:UserID" json:"-"`
 }

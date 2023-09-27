@@ -17,6 +17,7 @@ func (h *Handler) SpectrumList(ctx *gin.Context) {
 		}
 		ctx.HTML(http.StatusOK, "mainpage.html", gin.H{
 			"Spectrum": Spectrum,
+			//"SearchName": spectrumName,
 		})
 	} else {
 
