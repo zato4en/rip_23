@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-type AnalysisRequest struct {
+type Satellite struct {
 	gorm.Model
 	DateSend  time.Time `json:"date_send"`
 	DateStart time.Time `json:"date_start"`

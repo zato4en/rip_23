@@ -21,7 +21,7 @@ func main() {
 	if err := db.AutoMigrate(
 		&ds.Spectrum{},
 		&ds.AnalysisRequest{},
-		&ds.SpectrumRequest{},
+		&ds.Satellite{},
 		&ds.Users{},
 	); err != nil {
 		panic("cant migrate db:" + err.Error())

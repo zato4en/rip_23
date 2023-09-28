@@ -12,9 +12,9 @@ INSERT INTO spectrums (len , freq, Description,  Image  ,is_delete) VALUES (7.35
 
 
 
-INSERT INTO analysis_requests (date_send, date_start, date_end, status, satellite, user_id, moder_id) VALUES ('2021-01-01','2022-01-01', '2022-01-10', 'создан', 'Planck', 1,2);
-INSERT INTO analysis_requests (date_send, date_start, date_end, status, satellite, user_id, moder_id) VALUES ('2021-05-01','2022-02-01', '2022-02-10', 'в работе', 'COBE', 3,2);
-INSERT INTO analysis_requests (date_send, date_start, date_end, status, satellite, user_id, moder_id) VALUES ('2021-04-01','2022-03-01', '2022-03-10', 'отменён', 'WMAP', 3,2);
+INSERT INTO satellite (date_created, date_send, date_closed, status, satellite, user_id, moder_id) VALUES ('2021-01-01','2022-01-01', '2022-01-10', 'создан', 'Planck', 1,2);
+INSERT INTO satellite (date_created, date_send, date_closed, status, satellite, user_id, moder_id) VALUES ('2021-05-01','2022-02-01', '2022-02-10', 'в работе', 'COBE', 3,2);
+INSERT INTO satellite (date_created, date_send, date_closed, status, satellite, user_id, moder_id) VALUES ('2021-04-01','2022-03-01', '2022-03-10', 'отменён', 'WMAP', 3,2);
 
 
 
