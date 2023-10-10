@@ -32,21 +32,6 @@ func (h *Handler) SpectrumsList(ctx *gin.Context) {
 	}
 }
 
-//func (h *Handler) SpectrumsList(ctx *gin.Context) {
-//	if idStr := ctx.Query("Spectrum"); idStr != "" {
-//		SpectrumById(ctx, h, idStr)
-//		return
-//	}
-//
-//	Spectrums, err := h.Repository.SpectrumsList()
-//	if err != nil {
-//		h.errorHandler(ctx, http.StatusInternalServerError, err)
-//		return
-//	}
-//
-//	h.successHandler(ctx, "Spectrums", Spectrums)
-//}
-
 func (h *Handler) SpectrumById(ctx *gin.Context) {
 	id := ctx.Param("id")
 	Spectrums, err := h.Repository.SpectrumById(id)
@@ -60,21 +45,6 @@ func (h *Handler) SpectrumById(ctx *gin.Context) {
 		"Spectrums": Spectrums,
 	})
 }
-
-//func SpectrumById(ctx *gin.Context, h *Handler, idStr string) {
-//	//id, err := strconv.Atoi(idStr)
-//	//if err != nil {
-//	//	h.errorHandler(ctx, http.StatusBadRequest, err)
-//	//	return
-//	//}
-//	Spectrum, errBD := h.Repository.SpectrumById(idStr)
-//	if errBD != nil {
-//		h.errorHandler(ctx, http.StatusInternalServerError, errBD)
-//		return
-//	}
-//
-//	h.successHandler(ctx, "Spectrum", Spectrum)
-//}
 
 func (h *Handler) DeleteSpectrum(ctx *gin.Context) {
 	//id := ctx.Param("id")

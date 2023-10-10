@@ -18,16 +18,7 @@ func (r *Repository) SatelliteById(id uint) (*ds.Satellite, error) {
 }
 
 func (r *Repository) DeleteSatellite(id uint) error {
-	//Satellite := ds.Satellite{}
-	//if result := r.db.Where("status = ?", "удалён").First(&newStatus); result.Error != nil {
-	//	return result.Error
-	//}
-	//hike.StatusID = newStatus.ID
-	//if result := r.db.First(&Satellite, id); result.Error != nil {
-	//	return result.Error
-	//}
-	//result := r.db.Save(&Satellite)
-	//return result.Error
+
 	err := r.db.Model(&ds.Satellite{}).Where("id = ?", id).Update("status", utils.DeletedString)
 	if err != nil {
 		return err.Error
@@ -50,7 +41,6 @@ func (r *Repository) UpdateSatellite(updatedSatellite *ds.Satellite) error {
 	if updatedSatellite.DateAccepted.String() != utils.EmptyDate {
 		oldSatellite.DateAccepted = updatedSatellite.DateAccepted
 	}
-
 	if updatedSatellite.Status != "" {
 		oldSatellite.Status = updatedSatellite.Status
 	}

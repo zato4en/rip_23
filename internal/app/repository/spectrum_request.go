@@ -24,18 +24,26 @@ func (r *Repository) UpdateSpectrumNumberInRequest(updatedSpectrumRequest *ds.Sp
 	return result.Error
 }
 
+// Тут запрос на SQL потому что если через ГОРМ то будет возвращать айди, а у нас нет поля айди в М-М, поэтому через SQL
+// как сделать через ГОРМ тут я без понятия
+// Если у нас не находит заявку с айди которое есть в М-М, то мы создаем заявку с таким айди
 func (r *Repository) AddSpectrumToRequest(pr *ds.Spectrum_request) error {
+
 	var SatelliteRequest ds.Satellite
+
 	if err := r.db.First(&SatelliteRequest, pr.SatelliteID).Error; err != nil {
-		SatelliteRequest = ds.Satellite{ID: pr.SatelliteID, UserID: 1}
+
+		SatelliteRequest = ds.Satellite{ID: pr.SatelliteID, UserID: 1, Status: "существует"}
 		r.db.Create(&SatelliteRequest)
 	}
 
 	query := "INSERT INTO Spectrum_requests (Satellite_id, Spectrum_id, Satellite_number) VALUES ($1,$2,$3);"
+
 	err := r.db.Exec(query, pr.SatelliteID, pr.SpectrumID, pr.Satellite_number)
 	if err != nil {
 		return err.Error
 	}
+
 	return nil
 }
 

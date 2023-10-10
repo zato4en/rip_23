@@ -52,8 +52,7 @@ func (h *Handler) DeleteSatellite(ctx *gin.Context) {
 	}
 
 	h.successHandler(ctx, "Satellite_id", request.ID)
-	//ctx.Redirect(http.StatusOK, "/Satellites")
-	//h.SatellitesList(ctx)
+
 }
 
 func (h *Handler) UpdateSatellite(ctx *gin.Context) {
