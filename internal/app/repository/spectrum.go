@@ -6,38 +6,72 @@ import (
 	"strings"
 )
 
-// формирование списка спектров
-func (r *Repository) SpectrumList() (*[]ds.Spectrum, error) {
-	var Spectrum []ds.Spectrum
-	r.db.Where("is_delete = ?", false).Find(&Spectrum)
-	return &Spectrum, nil
+func (r *Repository) SpectrumsList() (*[]ds.Spectrum, error) {
+	var Spectrums []ds.Spectrum
+	r.db.Where("is_delete = ?", false).Find(&Spectrums)
+	return &Spectrums, nil
 }
 
-// поиск по спектрам
 func (r *Repository) SearchSpectrum(search string) (*[]ds.Spectrum, error) {
-	var Spectrum []ds.Spectrum
-	r.db.Find(&Spectrum)
+	var Spectrums []ds.Spectrum
+	r.db.Find(&Spectrums)
 
-	var filteredSpectrum []ds.Spectrum
-	for _, Spectrum := range Spectrum {
+	var filteredSpectrums []ds.Spectrum
+	for _, Spectrum := range Spectrums {
 		if strings.Contains(strings.ToLower(Spectrum.Description), strings.ToLower(search)) {
-			filteredSpectrum = append(filteredSpectrum, Spectrum)
+			filteredSpectrums = append(filteredSpectrums, Spectrum)
 		}
 	}
 
-	return &filteredSpectrum, nil
+	return &filteredSpectrums, nil
 }
 
-// спектр по id
 func (r *Repository) SpectrumById(id string) (*ds.Spectrum, error) {
-	var Spectrum ds.Spectrum
+	var Spectrums ds.Spectrum
 	intId, _ := strconv.Atoi(id)
-	r.db.Find(&Spectrum, intId)
-	return &Spectrum, nil
+	r.db.Find(&Spectrums, intId)
+	return &Spectrums, nil
 }
 
-// удаление спектра (установка флажка isDelete = true)
-func (r *Repository) DeleteSpectrum(id string) {
-	query := "UPDATE Spectrums SET is_delete = true WHERE id = $1"
-	r.db.Exec(query, id)
+func (r *Repository) DeleteSpectrum(id uint) error {
+	//query := "UPDATE Spectrums SET is_delete = true WHERE id = $1"
+	//r.db.Exec(query, id)
+	err := r.db.Model(&ds.Spectrum{}).Where("id = ?", id).Update("is_delete", true)
+	if err != nil {
+		return err.Error
+	}
+	return nil
+}
+func (r *Repository) AddSpectrum(Spectrum *ds.Spectrum) error {
+	result := r.db.Create(&Spectrum)
+	return result.Error
+}
+func (r *Repository) UpdateSpectrum(updatedSpectrum *ds.Spectrum) error {
+	var oldSpectrum ds.Spectrum
+	if result := r.db.First(&oldSpectrum, updatedSpectrum.ID); result.Error != nil {
+		return result.Error
+	}
+	if updatedSpectrum.Description != "" {
+		oldSpectrum.Description = updatedSpectrum.Description
+	}
+	if updatedSpectrum.Description != "" {
+		oldSpectrum.Description = updatedSpectrum.Description
+	}
+	if updatedSpectrum.Len != 0 {
+		oldSpectrum.Len = updatedSpectrum.Len
+	}
+	if updatedSpectrum.Freq != 0 {
+		oldSpectrum.Freq = updatedSpectrum.Freq
+	}
+
+	if updatedSpectrum.Image != "" {
+		oldSpectrum.Image = updatedSpectrum.Image
+	}
+
+	if updatedSpectrum.IsDelete != true {
+		oldSpectrum.IsDelete = updatedSpectrum.IsDelete
+	}
+	*updatedSpectrum = oldSpectrum
+	result := r.db.Save(updatedSpectrum)
+	return result.Error
 }

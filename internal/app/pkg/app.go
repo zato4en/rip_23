@@ -1,11 +1,12 @@
-package pkg
+package app
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
 	"rip2023/internal/app/config"
 	"rip2023/internal/app/handler"
+
+	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 )
 
 type Application struct {
