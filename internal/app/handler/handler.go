@@ -18,6 +18,7 @@ func NewHandler(l *logrus.Logger, r *repository.Repository) *Handler {
 	}
 }
 
+// эндпоинты
 func (h *Handler) RegisterHandler(router *gin.Engine) {
 	router.GET("/", h.SpectrumList)
 	router.GET("/Spectrum/:id", h.SpectrumById)
@@ -25,6 +26,7 @@ func (h *Handler) RegisterHandler(router *gin.Engine) {
 	registerStatic(router)
 }
 
+// статика
 func registerStatic(router *gin.Engine) {
 	router.LoadHTMLGlob("static/html/*")
 	router.Static("/static", "./static")

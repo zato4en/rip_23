@@ -1,9 +1,7 @@
 package ds
 
-import "gorm.io/gorm"
-
 type Spectrum struct {
-	gorm.Model
+	ID   uint    `json:"id" gorm:"primaryKey"`
 	Len  float64 `gorm:"not null" json:"len"`
 	Freq float64 `gorm:"not null" json:"freq"`
 

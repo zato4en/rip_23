@@ -1,18 +1,17 @@
 package ds
 
 import (
-	"gorm.io/gorm"
 	"time"
 )
 
 type Satellite struct {
-	gorm.Model
-	DateSend  time.Time `json:"date_send"`
-	DateStart time.Time `json:"date_start"`
-	DateEnd   time.Time `json:"date_end"`
-	Status    string    `gorm:"type:varchar(255)" json:"status"`
-	Satellite string    `gorm:"type:varchar(255)" json:"satellite"`
-	UserID    uint      `json:"-"`
-	ModerID   uint      `json:"-"`
-	User      Users     `gorm:"foreignKey:UserID" json:"-"`
+	ID           uint      `json:"id" gorm:"primaryKey"`
+	DateCreated  time.Time `json:"date_created"`
+	DateFormed   time.Time `json:"date_formed"`
+	DateAccepted time.Time `json:"date_accepted"`
+	Status       string    `gorm:"type:varchar(255)" json:"status"`
+	Satellite    string    `gorm:"type:varchar(255)" json:"satellite"`
+	UserID       uint      `json:"-"`
+	ModerID      uint      `json:"-"`
+	User         Users     `gorm:"foreignKey:UserID" json:"-"`
 }
