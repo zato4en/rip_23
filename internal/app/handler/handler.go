@@ -23,21 +23,26 @@ func NewHandler(l *logrus.Logger, r *repository.Repository, m *minio.Client) *Ha
 }
 
 func (h *Handler) RegisterHandler(router *gin.Engine) {
+
+	//эндпоинты для услуг
 	router.GET("/Spectrums", h.SpectrumsList)
 	router.GET("/Spectrums/:id", h.SpectrumById)
 	router.POST("/Spectrums", h.AddSpectrum)
 	router.PUT("/Spectrums", h.UpdateSpectrum)
 	router.DELETE("/Spectrums", h.DeleteSpectrum)
 
+	//эндпоинты для заявок
 	router.GET("/Satellites", h.SatellitesList)
 	router.DELETE("/Satellites", h.DeleteSatellite)
 	router.PUT("/Satellites", h.UpdateSatellite)
 
+	//эндпоинты для м-м
 	router.GET("/SpectrumsRequests", h.SpectrumRequestsList)
 	router.POST("/SpectrumsRequests", h.AddSpectrumToRequest)
 	router.DELETE("/SpectrumsRequests", h.DeleteSpectrumRequest)
 	router.PUT("/SpectrumsRequests", h.UpdateSpectrumNumberInRequest)
 
+	//эндпоинты для юзеров
 	router.GET("/users", h.UsersList)
 
 	registerStatic(router)

@@ -13,7 +13,7 @@ func (r *Repository) SatellitesList() (*[]ds.Satellite, error) {
 
 func (r *Repository) SatelliteById(id uint) (*ds.Satellite, error) {
 	Satellite := ds.Satellite{}
-	result := r.db.Preload("User").First(&Satellite, id)
+	result := r.db.Preload("User").Preload("Spectrum_requests.Spectrum").First(&Satellite, id)
 	return &Satellite, result.Error
 }
 
@@ -52,6 +52,19 @@ func (r *Repository) UpdateSatellite(updatedSatellite *ds.Satellite) error {
 	}
 	if updatedSatellite.ModerID != utils.EmptyInt {
 		oldSatellite.ModerID = updatedSatellite.ModerID
+	}
+	*updatedSatellite = oldSatellite
+	result := r.db.Save(updatedSatellite)
+	return result.Error
+}
+
+func (r *Repository) UpdateSatelliteStatus(updatedSatellite *ds.Satellite) error {
+	oldSatellite := ds.Satellite{}
+	if result := r.db.First(&oldSatellite, updatedSatellite.ID); result.Error != nil {
+		return result.Error
+	}
+	if updatedSatellite.Status != "" {
+		oldSatellite.Status = updatedSatellite.Status
 	}
 	*updatedSatellite = oldSatellite
 	result := r.db.Save(updatedSatellite)

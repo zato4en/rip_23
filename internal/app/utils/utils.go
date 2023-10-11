@@ -3,19 +3,18 @@ package utils
 import (
 	"fmt"
 	"github.com/rs/xid"
-	"rip2023/internal/app/ds"
 	"strings"
 )
 
-func FindElement(slice []ds.Spectrum, target ds.Spectrum) int {
-	for i, val := range slice {
-		if val == target {
-			return i
-		}
-	}
-
-	return -1
-}
+//func FindElement(slice []ds.Spectrum, target ds.Spectrum) int {
+//	for i, val := range slice {
+//		if val == target {
+//			return i
+//		}
+//	}
+//
+//	return -1
+//}
 
 func Max(num1 int, num2 int) int {
 	if num1 > num2 {

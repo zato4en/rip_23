@@ -13,6 +13,9 @@ import (
 	"rip2023/internal/app/repository"
 )
 
+//Ссылка на курс
+//https://github.com/iu5git/Web
+
 func main() {
 	logger := logrus.New()
 	minioClient := MyMinio.NewMinioClient(logger)

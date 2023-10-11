@@ -32,7 +32,7 @@ func (h *Handler) UpdateSpectrumNumberInRequest(ctx *gin.Context) {
 	}
 
 	h.successHandler(ctx, "updated_Spectrum", gin.H{
-		"fr_id":            updatedSpectrumRequest.SatelliteID,
+		"Satellite_id":     updatedSpectrumRequest.SatelliteID,
 		"Spectrum_id":      updatedSpectrumRequest.SpectrumID,
 		"Satellite_number": updatedSpectrumRequest.Satellite_number,
 	})
