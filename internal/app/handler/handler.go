@@ -26,7 +26,7 @@ func (h *Handler) RegisterHandler(router *gin.Engine) {
 
 	//эндпоинты для услуг
 	router.GET("/Spectrums", h.SpectrumsList)
-	router.GET("/Spectrums/:id", h.SpectrumById)
+	router.GET("/Spectrumbyid", h.SpectrumById)
 	router.POST("/Spectrums", h.AddSpectrum)
 	router.PUT("/Spectrums", h.UpdateSpectrum)
 	router.DELETE("/Spectrums", h.DeleteSpectrum)
@@ -35,15 +35,17 @@ func (h *Handler) RegisterHandler(router *gin.Engine) {
 	router.GET("/Satellites", h.SatellitesList)
 	router.DELETE("/Satellites", h.DeleteSatellite)
 	router.PUT("/Satellites", h.UpdateSatellite)
+	router.PUT("/SatellitesUpdate", h.UpdateSatelliteById)
+	router.GET("/UsersSatellite", h.UsersSatellite)
 
 	//эндпоинты для м-м
-	router.GET("/SpectrumsRequests", h.SpectrumRequestsList)
+	//router.GET("/SpectrumsRequests", h.SpectrumRequestsList)
 	router.POST("/SpectrumsRequests", h.AddSpectrumToRequest)
 	router.DELETE("/SpectrumsRequests", h.DeleteSpectrumRequest)
 	router.PUT("/SpectrumsRequests", h.UpdateSpectrumNumberInRequest)
 
 	//эндпоинты для юзеров
-	router.GET("/users", h.UsersList)
+	//router.GET("/users", h.UsersList)
 
 	registerStatic(router)
 }

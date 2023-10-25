@@ -2,7 +2,6 @@ package repository
 
 import (
 	"rip2023/internal/app/ds"
-	"strconv"
 	"strings"
 )
 
@@ -26,11 +25,10 @@ func (r *Repository) SearchSpectrum(search string) (*[]ds.Spectrum, error) {
 	return &filteredSpectrums, nil
 }
 
-func (r *Repository) SpectrumById(id string) (*ds.Spectrum, error) {
-	var Spectrums ds.Spectrum
-	intId, _ := strconv.Atoi(id)
-	r.db.Find(&Spectrums, intId)
-	return &Spectrums, nil
+func (r *Repository) SpectrumById(id uint) (*ds.Spectrum, error) {
+	var spectrums ds.Spectrum
+	r.db.Find(&spectrums, id)
+	return &spectrums, nil
 }
 
 func (r *Repository) DeleteSpectrum(id uint) error {
@@ -64,14 +62,24 @@ func (r *Repository) UpdateSpectrum(updatedSpectrum *ds.Spectrum) error {
 		oldSpectrum.Freq = updatedSpectrum.Freq
 	}
 
-	if updatedSpectrum.Image != "" {
-		oldSpectrum.Image = updatedSpectrum.Image
-	}
+	//if updatedSpectrum.Image != "" {
+	//	oldSpectrum.Image = updatedSpectrum.Image
+	//}
 
 	if updatedSpectrum.IsDelete != true {
 		oldSpectrum.IsDelete = updatedSpectrum.IsDelete
 	}
 	*updatedSpectrum = oldSpectrum
 	result := r.db.Save(updatedSpectrum)
+	return result.Error
+}
+
+func (r *Repository) UpdateSpectrumImage(id string, newImageURL string) error {
+	spectrum := ds.Spectrum{}
+	if result := r.db.First(&spectrum, id); result.Error != nil {
+		return result.Error
+	}
+	spectrum.Image = newImageURL
+	result := r.db.Save(spectrum)
 	return result.Error
 }

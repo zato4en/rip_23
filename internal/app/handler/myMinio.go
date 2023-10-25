@@ -15,7 +15,7 @@ func (h *Handler) createImageInMinio(file *multipart.File, header *multipart.Fil
 		return "", errName
 	}
 
-	if _, err := h.Minio.PutObject("spectrumanalysis", objectName, *file, header.Size, minio.PutObjectOptions{
+	if _, err := h.Minio.PutObject("spectrumbucket", objectName, *file, header.Size, minio.PutObjectOptions{
 		ContentType: header.Header.Get("Content-Type"),
 	}); err != nil {
 		return "", err

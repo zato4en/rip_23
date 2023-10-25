@@ -7,7 +7,7 @@ var (
 
 	idMustBeEmpty = errors.New("param `id` must be empty")
 
-	SpectrumCannotBeEmpty = errors.New("spectrum name cannot be empty")
+	SpectrumCannotBeEmpty = errors.New("spectrum description cannot be empty")
 
 	headerNotFound = errors.New("no file uploaded")
 
