@@ -1,16 +1,16 @@
 package handler
 
 import (
-	redis2 "github.com/drakenchef/RIP/internal/app/redis"
-	"rip2023/internal/app/config"
-	"rip2023/internal/app/repository"
-
 	"github.com/gin-gonic/gin"
 	"github.com/minio/minio-go"
 	"github.com/sirupsen/logrus"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"net/http"
+	"rip2023/internal/app/config"
+	redis2 "rip2023/internal/app/redis"
+	"rip2023/internal/app/repository"
+	"rip2023/internal/app/role"
 )
 
 type Handler struct {
