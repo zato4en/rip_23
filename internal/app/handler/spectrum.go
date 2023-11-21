@@ -9,6 +9,19 @@ import (
 	"strconv"
 )
 
+// /Users/drakenchef/go/bin/swag init -g cmd/main/main.go
+
+// SpectrumsList godoc
+// @Summary Список спектров
+// @Description Получение спектров и фильтрация при поиске
+// @Tags Спектры
+// @Produce json
+// @Param Spectrum query string false "Получаем определённый спектр"
+// @Param search query string false "Фильтрация поиска"
+// @Success 200 {object} ds.SpectrumsListResp
+// @Failure 400 {object} errorResp "Неверный запрос"
+// @Failure 500 {object} errorResp "Внутренняя ошибка сервера"
+// @Router /Spectrums [get]
 func (h *Handler) SpectrumsList(ctx *gin.Context) {
 	searchQuery := ctx.Query("search")
 	if searchQuery == "" {
@@ -68,6 +81,18 @@ func (h *Handler) SpectrumById(ctx *gin.Context) {
 	})
 }
 
+// DeleteSpectrum godoc
+// @Summary Удаление Спектра
+// @Description Удаление Спектра по его идентификатору.
+// @Security ApiKeyAuth
+// @Tags Спектры
+// @Accept json
+// @Produce json
+// @Param request body ds.DeleteSpectrumReq true "ID Спектра для удаления"
+// @Success 200 {object} ds.DeleteSpectrumRes "Спектр успешно удален"
+// @Failure 400 {object} errorResp "Неверный запрос"
+// @Failure 500 {object} errorResp "Внутренняя ошибка сервера"
+// @Router /Spectrums [delete]
 func (h *Handler) DeleteSpectrum(ctx *gin.Context) {
 	//id := ctx.Param("id")
 	//h.Repository.DeleteSpectrum(id)
@@ -91,6 +116,21 @@ func (h *Handler) DeleteSpectrum(ctx *gin.Context) {
 	h.successHandler(ctx, "Spectrum_id", request.ID)
 }
 
+// AddSpectrum godoc
+// @Summary Создание Спектра
+// @Security ApiKeyAuth
+// @Tags Спектры
+// @Description Создание Спектра
+// @Accept  multipart/form-data
+// @Produce  json
+// @Param name formData string true "Название Спектра"
+// @Param status formData string true "Статус Спектра"
+// @Param description formData string true "Описание Спектра"
+// @Param image formData file true "Изображение Спектра"
+// @Success 201 {object} ds.AddSpectrumResp
+// @Failure 400 {object} errorResp "Неверный запрос"
+// @Failure 500 {object} errorResp "Внутренняя ошибка сервера"
+// @Router /Spectrums [post]
 func (h *Handler) AddSpectrum(ctx *gin.Context) {
 	length := ctx.Request.FormValue("len")
 	freq := ctx.Request.FormValue("freq")
@@ -132,31 +172,18 @@ func (h *Handler) createSpectrum(Spectrum *ds.Spectrum) (int, error) {
 	return 0, nil
 }
 
-//func (h *Handler) UpdateSpectrum(ctx *gin.Context) {
-//	var updatedSpectrum ds.Spectrum
-//	if err := ctx.BindJSON(&updatedSpectrum); err != nil {
-//		h.errorHandler(ctx, http.StatusBadRequest, err)
-//		return
-//	}
-//	if updatedSpectrum.ID == 0 {
-//		h.errorHandler(ctx, http.StatusBadRequest, idNotFound)
-//		return
-//	}
-//	if err := h.Repository.UpdateSpectrum(&updatedSpectrum); err != nil {
-//		h.errorHandler(ctx, http.StatusBadRequest, err)
-//		return
-//	}
-//
-//	h.successHandler(ctx, "updated_Spectrum", gin.H{
-//		"id":          updatedSpectrum.ID,
-//		"description": updatedSpectrum.Description,
-//		"length":      updatedSpectrum.Len,
-//		"frequency":   updatedSpectrum.Freq,
-//		"image":       updatedSpectrum.Image,
-//		"is_delete":   updatedSpectrum.IsDelete,
-//	})
-//}
-
+// UpdateSpectrum godoc
+// @Summary Обновление информации о спектре
+// @Security ApiKeyAuth
+// @Tags Спектры
+// @Description Обновление информации о спектре
+// @Accept json
+// @Produce json
+// @Param updated_Spectrum body ds.UpdateSpectrumReq true "Обновленная информация о спектре"
+// @Success 200 {object} ds.UpdateSpectrumResp
+// @Failure 400 {object} errorResp "Неверный запрос"
+// @Failure 500 {object} errorResp "Внутренняя ошибка сервера"
+// @Router /Spectrums [put]
 func (h *Handler) UpdateSpectrum(ctx *gin.Context) {
 
 	spectrumId := ctx.Request.FormValue("id")
