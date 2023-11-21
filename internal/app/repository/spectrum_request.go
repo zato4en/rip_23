@@ -27,23 +27,23 @@ func (r *Repository) UpdateSpectrumNumberInRequest(updatedSpectrumRequest *ds.Sp
 // Тут запрос на SQL потому что если через ГОРМ то будет возвращать айди, а у нас нет поля айди в М-М, поэтому через SQL
 // как сделать через ГОРМ тут я без понятия
 // Если у нас не находит заявку с айди которое есть в М-М, то мы создаем заявку с таким айди
-func (r *Repository) AddSpectrumToRequest(pr *ds.Spectrum_request) error {
+func (r *Repository) AddSpectrumToRequest(pr *struct {
+	SpectrumId uint `json:"spectrum_id"`
+}) error {
 
-	var SatelliteRequest ds.Satellite
+	var satellite ds.Satellite
+	r.db.Where("user_id = ?", 1).First(&satellite)
 
-	if err := r.db.First(&SatelliteRequest, pr.SatelliteID).Error; err != nil {
-
-		SatelliteRequest = ds.Satellite{ID: pr.SatelliteID, UserID: 1, Status: "существует"}
-		r.db.Create(&SatelliteRequest)
+	if satellite.ID == 0 {
+		newRequest := ds.Satellite{UserID: 1, Status: "создан"}
+		r.db.Create(&newRequest)
+		satellite = newRequest
 	}
-
-	query := "INSERT INTO Spectrum_requests (Satellite_id, Spectrum_id, Satellite_number) VALUES ($1,$2,$3);"
-
-	err := r.db.Exec(query, pr.SatelliteID, pr.SpectrumID, pr.Satellite_number)
+	query := "INSERT INTO spectrum_requests (satellite_id, spectrum_id) VALUES ($1,$2) ON CONFLICT DO NOTHING;"
+	err := r.db.Exec(query, satellite.ID, pr.SpectrumId)
 	if err != nil {
 		return err.Error
 	}
-
 	return nil
 }
 

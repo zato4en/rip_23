@@ -19,42 +19,53 @@ func (h *Handler) SpectrumsList(ctx *gin.Context) {
 			})
 			return
 		}
+		// Получаем id заявки пользователя
+		userRequestID, err := h.Repository.GetUserRequestID(1)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
 		ctx.JSON(http.StatusOK, gin.H{
 			"Spectrums": Spectrums,
+			"Flight_id": userRequestID,
 		})
 	} else {
-
 		filteredSpectrums, err := h.Repository.SearchSpectrum(searchQuery)
 		if err != nil {
-			// обработка ошибки
+			ctx.JSON(http.StatusInternalServerError, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+		// Получаем id заявки пользователя
+		userRequestID, err := h.Repository.GetUserRequestID(1)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{
+				"error": err.Error(),
+			})
 		}
 		ctx.JSON(http.StatusOK, gin.H{
 			"Spectrums": filteredSpectrums,
+			"Flight_id": userRequestID,
 		})
-
 	}
 }
 
 func (h *Handler) SpectrumById(ctx *gin.Context) {
-	var request struct {
-		ID uint `json:"id"`
-	}
-	if err := ctx.BindJSON(&request); err != nil {
-		h.errorHandler(ctx, http.StatusBadRequest, err)
-		return
-	}
-	if request.ID == 0 {
-		h.errorHandler(ctx, http.StatusBadRequest, idNotFound)
-		return
-	}
-	if Spectrum, err := h.Repository.SpectrumById(request.ID); err != nil {
-		h.errorHandler(ctx, http.StatusInternalServerError, err)
-		return
-	} else {
-		ctx.JSON(http.StatusOK, gin.H{
-			"Spectrum": Spectrum,
+	id := ctx.Param("id")
+	idint, _ := strconv.Atoi(id)
+	spectrums, err := h.Repository.SpectrumById(idint)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
 		})
+		return
 	}
+	ctx.JSON(http.StatusOK, gin.H{
+		"Spectrums": spectrums,
+	})
 }
 
 func (h *Handler) DeleteSpectrum(ctx *gin.Context) {

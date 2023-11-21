@@ -25,7 +25,7 @@ func (r *Repository) SearchSpectrum(search string) (*[]ds.Spectrum, error) {
 	return &filteredSpectrums, nil
 }
 
-func (r *Repository) SpectrumById(id uint) (*ds.Spectrum, error) {
+func (r *Repository) SpectrumById(id int) (*ds.Spectrum, error) {
 	var spectrums ds.Spectrum
 	r.db.Find(&spectrums, id)
 	return &spectrums, nil
@@ -82,4 +82,13 @@ func (r *Repository) UpdateSpectrumImage(id string, newImageURL string) error {
 	spectrum.Image = newImageURL
 	result := r.db.Save(spectrum)
 	return result.Error
+}
+
+func (r *Repository) GetUserRequestID(userID int) (int, error) {
+	var userRequestID int
+	err := r.db.Table("satellites").Select("user_id").Where("user_id = ? AND status = ?", userID, "создан").Scan(&userRequestID).Error
+	if err != nil {
+		return 0, err
+	}
+	return userRequestID, nil
 }

@@ -12,7 +12,8 @@ type Satellite struct {
 	Status            string             `gorm:"type:varchar(255)" json:"status"`
 	Satellite         string             `gorm:"type:varchar(255)" json:"satellite"`
 	UserID            uint               `json:"user_id"`
-	ModerID           uint               `json:"-"`
+	ModerID           uint               `json:"moder_id"`
+	UserLogin         string             `json:"user_login"`
 	Spectrum_requests []Spectrum_request `json:"spectrum_requests" gorm:"foreignkey:SatelliteID"`
 	User              Users              `gorm:"foreignKey:UserID" json:"-"`
 }

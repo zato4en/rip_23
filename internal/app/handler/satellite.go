@@ -9,85 +9,68 @@ import (
 )
 
 func (h *Handler) SatellitesList(ctx *gin.Context) {
-	Satellites, err := h.Repository.SatellitesList()
+	userID := ctx.DefaultQuery("user_id", "")
+	datestart := ctx.DefaultQuery("date_formation_start", "")
+	dateend := ctx.DefaultQuery("date_formation_end", "")
+	status := ctx.DefaultQuery("status", "")
 
-	//user id sort in requests
-	if userIdString := ctx.Query("Sort"); userIdString == "ID" {
-		var request struct {
-			ID uint `json:"id"`
-		}
-		if err = ctx.BindJSON(&request); err != nil {
-			h.errorHandler(ctx, http.StatusBadRequest, err)
-			return
-		}
-		if request.ID == 0 {
-			h.errorHandler(ctx, http.StatusBadRequest, idNotFound)
-			return
-		}
-		var Satellite *[]ds.Satellite
-		if Satellite, err = h.Repository.SatellitesListByUser(request.ID); err != nil {
-			h.errorHandler(ctx, http.StatusInternalServerError, err)
-			return
-		}
-		h.successHandler(ctx, "Satellites by user id", Satellite)
-		return
-	}
-
-	//date sort in requests
-	if DateString := ctx.Query("Sort"); DateString == "Date" {
-		var request struct {
-			DateFormationStart string `json:"date_formation_start" time_format:"2006-01-02"`
-			DateFormationEnd   string `json:"date_formation_end" time_format:"2006-01-02"`
-		}
-		if err = ctx.BindJSON(&request); err != nil {
-			h.errorHandler(ctx, http.StatusBadRequest, err)
-			return
-		}
-		if request.DateFormationStart == "" {
-			h.errorHandler(ctx, http.StatusBadRequest, errors.New("empty date input"))
-			return
-		}
-		if request.DateFormationEnd == "" {
-			h.errorHandler(ctx, http.StatusBadRequest, errors.New("empty date input"))
-			return
-		}
-		var Satellite *[]ds.Satellite
-		if Satellite, err = h.Repository.SatellitesListByDate(request.DateFormationStart, request.DateFormationEnd); err != nil {
-			h.errorHandler(ctx, http.StatusInternalServerError, err)
-			return
-		}
-		h.successHandler(ctx, "Satellites by date", Satellite)
-		return
-	}
+	Satellites, err := h.Repository.SatellitesList(userID, datestart, dateend, status)
 
 	if err != nil {
-		h.errorHandler(ctx, http.StatusNoContent, err)
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch satellites"})
 		return
 	}
-	h.successHandler(ctx, "Satellites", Satellites)
+
+	ctx.JSON(http.StatusOK, Satellites)
 }
 
-func (h *Handler) UsersSatellite(ctx *gin.Context) {
-	satellite, err := h.Repository.UsersSatellite()
+func (h *Handler) SatelliteById(ctx *gin.Context) {
+	id := ctx.Param("id")
+	Satellite, err := h.Repository.SatelliteById(id)
 	if err != nil {
 		h.errorHandler(ctx, http.StatusNoContent, err)
-		return
-	}
-	h.successHandler(ctx, "Satellite", satellite)
-}
-
-func SatelliteById(ctx *gin.Context, h *Handler, SatelliteStringID string) {
-	SatelliteID, err := strconv.Atoi(SatelliteStringID)
-	if err != nil {
-		h.errorHandler(ctx, http.StatusBadRequest, err)
-		return
-	}
-	Satellite, errDB := h.Repository.SatelliteById(uint(SatelliteID))
-	if errDB != nil {
-		h.errorHandler(ctx, http.StatusInternalServerError, errDB)
 		return
 	}
 	h.successHandler(ctx, "Satellite", Satellite)
+
+}
+
+func (h *Handler) UserUpdateSatelliteStatusById(ctx *gin.Context) {
+	id := ctx.Param("id")
+	idint, err := strconv.Atoi(id)
+	if err != nil {
+		h.errorHandler(ctx, http.StatusBadRequest, idNotFound)
+		return
+	}
+	result, err := h.Repository.UserUpdateSatelliteStatusById(idint)
+	if err != nil {
+		h.errorHandler(ctx, http.StatusInternalServerError, errors.New("can not refactor status"))
+		return
+	}
+
+	h.successHandler(ctx, "updated_status_by_user", gin.H{
+		"id":     result.ID,
+		"status": result.Status,
+	})
+}
+
+func (h *Handler) ModerUpdateSatelliteStatusById(ctx *gin.Context) {
+	id := ctx.Param("id")
+	idint, err := strconv.Atoi(id)
+	if err != nil {
+		h.errorHandler(ctx, http.StatusBadRequest, idNotFound)
+		return
+	}
+	result, err := h.Repository.ModerUpdateSatelliteStatusById(idint)
+	if err != nil {
+		h.errorHandler(ctx, http.StatusInternalServerError, errors.New("can not refactor status"))
+		return
+	}
+
+	h.successHandler(ctx, "updated_status_by_moder", gin.H{
+		"id":     result.ID,
+		"status": result.Status,
+	})
 }
 
 func (h *Handler) UpdateSatelliteById(ctx *gin.Context) {
@@ -157,4 +140,13 @@ func (h *Handler) UpdateSatellite(ctx *gin.Context) {
 		"moder_id":      updatedSatellite.ModerID,
 	})
 
+}
+
+func (h *Handler) UsersSatellite(ctx *gin.Context) {
+	Satellite, err := h.Repository.UsersSatellite()
+	if err != nil {
+		h.errorHandler(ctx, http.StatusNoContent, err)
+		return
+	}
+	h.successHandler(ctx, "Satellite", Satellite)
 }

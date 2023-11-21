@@ -5,13 +5,29 @@ import (
 	"rip2023/internal/app/utils"
 )
 
-func (r *Repository) SatellitesList() (*[]ds.Satellite, error) {
+func (r *Repository) SatellitesList(userID, datestart, dateend, status string) (*[]ds.Satellite, error) {
 	var Satellites []ds.Satellite
-	result := r.db.Preload("User").Where("status !=?", "удалён").Find(&Satellites)
+	db := r.db.Preload("User").Where("status !=?", utils.DeletedString)
+
+	if userID != "" {
+		db = db.Where("user_id = ?", userID)
+	}
+
+	if datestart != "" && dateend != "" {
+		db = db.Where("date_formation > ? AND date_formation < ?", datestart, dateend)
+	}
+
+	if status != "" {
+		db = db.Where("status = ?", status)
+	}
+	for i := range Satellites {
+		Satellites[i].UserLogin = Satellites[i].User.Login
+	}
+	result := db.Find(&Satellites)
 	return &Satellites, result.Error
 }
 
-func (r *Repository) SatelliteById(id uint) (*ds.Satellite, error) {
+func (r *Repository) SatelliteById(id string) (*ds.Satellite, error) {
 	Satellite := ds.Satellite{}
 	result := r.db.Preload("User").Preload("Spectrum_requests.Spectrum").First(&Satellite, id)
 	return &Satellite, result.Error
@@ -28,7 +44,7 @@ func (r *Repository) DeleteSatellite(id uint) error {
 }
 func (r *Repository) UsersSatellite() (*[]ds.Satellite, error) {
 	var satellite []ds.Satellite
-	result := r.db.Preload("User").Preload("Spectrum_requests.Spectrum").Where("user_id = ?", 3).Find(&satellite)
+	result := r.db.Preload("User").Preload("Spectrum_requests.Spectrum").Where("user_id = ?", 1).Find(&satellite)
 	return &satellite, result.Error
 }
 func (r *Repository) SatellitesListByDate(datestart, dateend string) (*[]ds.Satellite, error) {
@@ -40,6 +56,11 @@ func (r *Repository) SatellitesListByDate(datestart, dateend string) (*[]ds.Sate
 func (r *Repository) SatellitesListByUser(id uint) (*[]ds.Satellite, error) {
 	var satellites []ds.Satellite
 	result := r.db.Preload("User").Where("user_id = ?", id).Find(&satellites)
+	return &satellites, result.Error
+}
+func (r *Repository) SatellitesListByStatus(status string) (*[]ds.Satellite, error) {
+	var satellites []ds.Satellite
+	result := r.db.Preload("User").Where("status = ?", status).Find(&satellites)
 	return &satellites, result.Error
 }
 
@@ -109,4 +130,45 @@ func (r *Repository) UpdateSatelliteStatus(updatedSatellite *ds.Satellite) error
 	*updatedSatellite = oldSatellite
 	result := r.db.Save(updatedSatellite)
 	return result.Error
+}
+
+func (r *Repository) UserUpdateSatelliteStatusById(id int) (*ds.Satellite, error) {
+	var Satellite ds.Satellite
+	result := r.db.First(&Satellite, id)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	// Меняем статус тут
+	if Satellite.Status == "создан" {
+		Satellite.Status = "в работе"
+	} else if Satellite.Status == "в работе" {
+		Satellite.Status = "отменён"
+	}
+
+	// Сохраняем изменения в базе данных
+	if err := r.db.Save(&Satellite).Error; err != nil {
+		return nil, err
+	}
+
+	return &Satellite, nil
+}
+func (r *Repository) ModerUpdateSatelliteStatusById(id int) (*ds.Satellite, error) {
+	var Satellite ds.Satellite
+	result := r.db.First(&Satellite, id)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	// Меняем статус тут
+	if Satellite.Status == "отменён" {
+		Satellite.Status = "удалён"
+	}
+
+	// Сохраняем изменения в базе данных
+	if err := r.db.Save(&Satellite).Error; err != nil {
+		return nil, err
+	}
+
+	return &Satellite, nil
 }

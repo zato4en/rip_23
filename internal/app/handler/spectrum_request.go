@@ -39,30 +39,26 @@ func (h *Handler) UpdateSpectrumNumberInRequest(ctx *gin.Context) {
 }
 
 func (h *Handler) AddSpectrumToRequest(ctx *gin.Context) {
-	var SpectrumRequest ds.Spectrum_request
-	if err := ctx.BindJSON(&SpectrumRequest); err != nil {
+	//var spectrumRequest ds.spectrumsRequest
+	var request struct {
+		SpectrumId uint `json:"spectrum_id"`
+	}
+	if err := ctx.BindJSON(&request); err != nil {
 		h.errorHandler(ctx, http.StatusBadRequest, err)
 		return
 	}
-	//if SpectrumRequest.ID != 0 {
-	//	h.errorHandler(ctx, http.StatusBadRequest, idMustBeEmpty)
-	//	return
-	//}
-	if SpectrumRequest.Satellite_number == 0 {
-		h.errorHandler(ctx, http.StatusBadRequest, SatelliteNumberCannotBeEmpty)
-		return
-	}
-	if SpectrumRequest.SatelliteID == 0 || SpectrumRequest.SpectrumID == 0 {
+
+	if request.SpectrumId == 0 {
 		h.errorHandler(ctx, http.StatusBadRequest, SatelliteIDOrSpectrumIDIsEmpty)
 		return
 	}
 
-	if err := h.Repository.AddSpectrumToRequest(&SpectrumRequest); err != nil {
+	if err := h.Repository.AddSpectrumToRequest(&request); err != nil {
 		h.errorHandler(ctx, http.StatusInternalServerError, err)
 		return
 	}
 
-	h.successAddHandler(ctx, "updated_Spectrum_request", SpectrumRequest)
+	h.successAddHandler(ctx, "updated_spectrum_request", request)
 }
 
 func (h *Handler) DeleteSpectrumRequest(ctx *gin.Context) {
