@@ -38,6 +38,18 @@ func (h *Handler) UpdateSpectrumNumberInRequest(ctx *gin.Context) {
 	})
 }
 
+// AddSpectrumToRequest godoc
+// @Summary Добавление спектра в заявку
+// @Security ApiKeyAuth
+// @Tags Планеты
+// @Description Добавление спектра в заявку. Если заявка не найдена, она будет сформирована
+// @Accept json
+// @Produce json
+// @Param request body ds.Spectrum_request true "Данные для добавления спектра в заявку"
+// @Success 200 {object} ds.Spectrum_request "ID"
+// @Failure 400 {object} errorResp "Неверный запрос"
+// @Failure 500 {object} errorResp "Внутренняя ошибка сервера"
+// @Router /Spectrum_request [post]
 func (h *Handler) AddSpectrumToRequest(ctx *gin.Context) {
 	//var spectrumRequest ds.spectrumsRequest
 	var request struct {
