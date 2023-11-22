@@ -8,6 +8,7 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"net/http"
 	"rip2023/internal/app/config"
+	_ "rip2023/internal/app/docs"
 	redis2 "rip2023/internal/app/redis"
 	"rip2023/internal/app/repository"
 	"rip2023/internal/app/role"
@@ -37,6 +38,7 @@ func (h *Handler) RegisterHandler(router *gin.Engine) {
 	h.UserCRUD(router)
 	h.SpectrumCRUD(router)
 	h.SatelliteCRUD(router)
+	h.SpectrumsRequestsCRUD(router)
 	registerStatic(router)
 }
 func (h *Handler) UserCRUD(router *gin.Engine) {
@@ -59,7 +61,7 @@ func (h *Handler) SatelliteCRUD(router *gin.Engine) {
 	router.PUT("/Satellites", h.WithIdCheck(role.Manager, role.Admin), h.UpdateSatellite)
 	router.PUT("/SatellitesUser/:id", h.WithAuthCheck(role.Buyer), h.UserUpdateSatelliteStatusById)
 	router.PUT("/SatellitesModer/:id", h.WithAuthCheck(role.Manager, role.Admin), h.ModerUpdateSatelliteStatusById)
-	router.GET("/UsersSatellite", h.WithIdCheck(role.Buyer), h.UsersSatellite)
+	router.GET("/UsersSatellite", h.WithIdCheck(role.Buyer, role.Manager, role.Admin), h.UsersSatellite)
 	router.PUT("/UsersSatelliteUpdate", h.WithIdCheck(role.Buyer, role.Manager, role.Admin), h.UsersUpdateSatellite)
 }
 func (h *Handler) SpectrumsRequestsCRUD(router *gin.Engine) {
@@ -70,9 +72,8 @@ func (h *Handler) SpectrumsRequestsCRUD(router *gin.Engine) {
 }
 
 func registerStatic(router *gin.Engine) {
-	router.LoadHTMLGlob("static/html/*")
+	router.GET("/swag/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	router.Static("/static", "./static")
-	router.Static("/css", "./static")
 	router.Static("/img", "./static")
 }
 
@@ -107,9 +108,9 @@ func (h *Handler) successAddHandler(ctx *gin.Context, key string, data interface
 }
 
 // Ping godoc
-// @Summary      Show hello text
-// @Description  very friendly response
-// @Tags         Tests
+// @Summary       hello text
+// @Description
+// @Tags         Тестик
 // @Security ApiKeyAuth
 // @Produce      json
 // @Router       /ping [get]

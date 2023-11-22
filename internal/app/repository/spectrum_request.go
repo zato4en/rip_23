@@ -29,13 +29,13 @@ func (r *Repository) UpdateSpectrumNumberInRequest(updatedSpectrumRequest *ds.Sp
 // Если у нас не находит заявку с айди которое есть в М-М, то мы создаем заявку с таким айди
 func (r *Repository) AddSpectrumToRequest(pr *struct {
 	SpectrumId uint `json:"spectrum_id"`
-}) error {
+}, userId uint) error {
 
 	var satellite ds.Satellite
-	r.db.Where("user_id = ?", 1).First(&satellite)
+	r.db.Where("user_id = ?", userId).First(&satellite)
 
 	if satellite.ID == 0 {
-		newRequest := ds.Satellite{UserID: 1, Status: "создан"}
+		newRequest := ds.Satellite{UserID: userId, Status: "черновик"}
 		r.db.Create(&newRequest)
 		satellite = newRequest
 	}

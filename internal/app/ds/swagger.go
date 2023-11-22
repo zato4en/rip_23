@@ -10,6 +10,25 @@ type SatellitesListRes2 struct {
 	Satellite []Satellite `json:"Satellite"`
 }
 
+type DeleteSpectrumInRequestReq struct {
+	ID int `json:"id"`
+}
+
+type DeleteSpectrumInRequestRes struct {
+	Status                   string `json:"status"`
+	DeletedSpectrumInRequest int    `json:"deleted_Spectrum_in_request"`
+}
+
+type UpdateSpectrumInRequestNumberReq struct {
+	SpectrumInRequestID int `json:"id"`
+	SatelliteNumber     int `json:"Satellite_number"`
+}
+
+type UpdateSpectrumInRequestNumberRes struct {
+	Status string `json:"status"`
+	ID     uint   `json:"id"`
+}
+
 type DeleteSpectrumRes struct {
 	DeletedId int `json:"deleted_id"`
 }
@@ -20,15 +39,15 @@ type DeleteSpectrumRes struct {
 //}
 
 type UpdatedSatelliteRes struct {
-	ID           uint   `json:"id" gorm:"primaryKey"`
-	DateCreated  string `json:"date_created"`
-	DateFormed   string `json:"date_formed"`
-	DateAccepted string `json:"date_accepted"`
-	Status       string `gorm:"type:varchar(255)" json:"status"`
-	Satellite    string `gorm:"type:varchar(255)" json:"satellite"`
-	UserID       uint   `json:"user_id"`
-	ModerID      uint   `json:"moder_id"`
-	UserLogin    string `json:"user_login"`
+	ID             uint   `json:"id" gorm:"primary_key"`
+	DateCreate     string `json:"date_create"`
+	DateFormation  string `json:"date_formation"`
+	DateCompletion string `json:"date_completion"`
+	Status         string `json:"status"`
+	AMS            string `json:"ams"`
+	UserID         uint   `json:"user_id"`
+	ModerID        uint   `json:"moder_id"`
+	UserLogin      string `json:"user_login"`
 }
 
 type DeleteSatelliteRes struct {
@@ -47,12 +66,13 @@ type UpdateSatelliteReq struct {
 }
 
 type UpdateStatusForModeratorReq struct {
-	SatelliteID uint   `json:"Satellite_id"`
-	Status      string `json:"status"`
+	SatelliteID uint `json:"id"`
+	//Status   string `json:"status"`
 }
 
 type UpdateStatusForUserReq struct {
-	Status string `json:"status" example:"2"`
+	SatelliteID uint `json:"id"`
+	//Status   string `json:"status" example:"в работе"`
 }
 
 type DeleteSpectrumReq struct {
@@ -61,9 +81,9 @@ type DeleteSpectrumReq struct {
 
 type UpdateSpectrumReq struct {
 	Id          int    `json:"id" binding:"required"`
-	Name        string `json:"city_name"`
+	Name        string `json:"name"`
 	Description string `json:"description"`
-	Status      string `json:"status"`
+	//Status      string `json:"status"`
 }
 
 type AddSpectrumToRequestReq struct {
@@ -77,23 +97,20 @@ type AddSpectrumToRequestResp struct {
 }
 
 type UpdateSpectrumResp struct {
-	ID          string `json:"id"`
-	Name        string `json:"name"`
-	Status      string `json:"status"`
+	ID   string `json:"id"`
+	Name string `json:"name"`
+	//Status      string `json:"status"`
 	Description string `json:"description"`
 	Image       string `json:"image"`
 }
 
 type AddSpectrumResp struct {
-	Status     string `json:"status"`
+	//Status   string `json:"status"`
 	SpectrumId string `json:"Spectrum_id"`
 }
 
 type SpectrumsListResp struct {
-	Status    string     `json:"status"`
+	//Status  string   `json:"status"`
 	Spectrums []Spectrum `json:"Spectrums"`
 	//BasketId string `json:"basket_id"`
 }
-
-//type AddPlaIntoHikeRequest struct {
-//}

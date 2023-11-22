@@ -1,6 +1,7 @@
 package redis
 
 import (
+	"context"
 	"fmt"
 	"github.com/redis/go-redis/v9"
 	"rip2023/internal/app/config"

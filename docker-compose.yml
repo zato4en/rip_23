@@ -47,6 +47,14 @@ services:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_PASSWORD: ${DB_PASS}
+  redis:
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning
+    volumes:
+      - redis-data:/data
 
   minio1:
     <<: *minio-common
@@ -92,6 +100,8 @@ services:
 
 volumes:
   postgresdb-data:
+    driver: local
+  redis-data:
     driver: local
   data1-1:
   data1-2:

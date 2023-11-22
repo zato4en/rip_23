@@ -42,9 +42,9 @@ func (r *Repository) DeleteSatellite(id uint) error {
 	return nil
 
 }
-func (r *Repository) UsersSatellite() (*[]ds.Satellite, error) {
+func (r *Repository) UsersSatellite(userid uint) (*[]ds.Satellite, error) {
 	var satellite []ds.Satellite
-	result := r.db.Preload("User").Preload("Spectrum_requests.Spectrum").Where("user_id = ?", 1).Find(&satellite)
+	result := r.db.Preload("User").Preload("Spectrum_requests.Spectrum").Where("user_id = ?", userid).Find(&satellite)
 	return &satellite, result.Error
 }
 func (r *Repository) SatellitesListByDate(datestart, dateend string) (*[]ds.Satellite, error) {
@@ -140,10 +140,12 @@ func (r *Repository) UserUpdateSatelliteStatusById(id int) (*ds.Satellite, error
 	}
 
 	// Меняем статус тут
-	if Satellite.Status == "создан" {
-		Satellite.Status = "в работе"
-	} else if Satellite.Status == "в работе" {
+	if Satellite.Status == "черновик" {
+		Satellite.Status = "сформирован"
+	} else if Satellite.Status == "сформирован" {
 		Satellite.Status = "отменён"
+	} else if Satellite.Status == "в работе" {
+		Satellite.Status = "завершен"
 	}
 
 	// Сохраняем изменения в базе данных
@@ -154,21 +156,65 @@ func (r *Repository) UserUpdateSatelliteStatusById(id int) (*ds.Satellite, error
 	return &Satellite, nil
 }
 func (r *Repository) ModerUpdateSatelliteStatusById(id int) (*ds.Satellite, error) {
-	var Satellite ds.Satellite
-	result := r.db.First(&Satellite, id)
+	var satellite ds.Satellite
+	result := r.db.First(&satellite, id)
 	if result.Error != nil {
 		return nil, result.Error
 	}
 
 	// Меняем статус тут
-	if Satellite.Status == "отменён" {
-		Satellite.Status = "удалён"
+
+	if satellite.Status == "сформирован" {
+		satellite.Status = "в работе"
+
+	} else if satellite.Status == "в работе" {
+		satellite.Status = "завершён"
+	} else if satellite.Status != "удалён" && satellite.Status != "отменён" {
+		satellite.Status = "отменён"
 	}
 
 	// Сохраняем изменения в базе данных
-	if err := r.db.Save(&Satellite).Error; err != nil {
+	if err := r.db.Save(&satellite).Error; err != nil {
 		return nil, err
 	}
 
-	return &Satellite, nil
+	return &satellite, nil
+}
+
+func (r *Repository) UsersUpdateSatellite(updatedSatellite *ds.Satellite, userid uint) error {
+	oldSatellite := ds.Satellite{}
+	result := r.db.Where("user_id = ?", userid).Find(&oldSatellite)
+	if result.Error != nil {
+		return result.Error
+	}
+	if updatedSatellite.DateCreated.String() != utils.EmptyDate {
+		oldSatellite.DateCreated = updatedSatellite.DateCreated
+	}
+	if updatedSatellite.DateFormed.String() != utils.EmptyDate {
+		oldSatellite.DateFormed = updatedSatellite.DateFormed
+	}
+	if updatedSatellite.DateAccepted.String() != utils.EmptyDate {
+		oldSatellite.DateAccepted = updatedSatellite.DateAccepted
+	}
+	if updatedSatellite.Status != "" {
+		if updatedSatellite.Status == "сформирован" && oldSatellite.Status == "черновик" {
+			oldSatellite.Status = updatedSatellite.Status
+		} else if updatedSatellite.Status == "отменён" && oldSatellite.Status == "сформирован" {
+			oldSatellite.Status = updatedSatellite.Status
+		} else if updatedSatellite.Status == "завершён" && oldSatellite.Status == "в работе" {
+			oldSatellite.Status = updatedSatellite.Status
+		}
+	}
+	if updatedSatellite.Satellite != "" {
+		oldSatellite.Satellite = updatedSatellite.Satellite
+	}
+	if updatedSatellite.UserID != utils.EmptyInt {
+		oldSatellite.UserID = updatedSatellite.UserID
+	}
+	if updatedSatellite.ModerID != utils.EmptyInt {
+		oldSatellite.ModerID = updatedSatellite.ModerID
+	}
+	*updatedSatellite = oldSatellite
+	result = r.db.Save(updatedSatellite)
+	return result.Error
 }

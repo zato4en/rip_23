@@ -1,8 +1,8 @@
-
-INSERT INTO users (login, password, is_admin) VALUES ('user1', 'user1', false);
-INSERT INTO users (login, password, is_admin) VALUES ('user4', 'admin', true);
-INSERT INTO users (login, password, is_admin) VALUES ('user2', 'user2', false);
-INSERT INTO users (login, password, is_admin) VALUES ('user3', 'user3',false);
+--
+-- INSERT INTO users (login, password, is_admin) VALUES ('user1', 'user1', false);
+-- INSERT INTO users (login, password, is_admin) VALUES ('user4', 'admin', true);
+-- INSERT INTO users (login, password, is_admin) VALUES ('user2', 'user2', false);
+-- INSERT INTO users (login, password, is_admin) VALUES ('user3', 'user3',false);
 
 
 
@@ -13,14 +13,14 @@ INSERT INTO spectrums (len , freq, Description,  Image  ,is_delete) VALUES (2.72
 INSERT INTO spectrums (len , freq, Description,  Image  ,is_delete) VALUES (7.35, 40.86,'CMB3 - имеет длину волны 7.35мм и частоту 40.86 Ггц', 'http://172.21.0.3:9000/spectrumbucket/CMB3.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=3DR34MJFUPPY0JFBB2EZ%2F20231025%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20231025T072853Z&X-Amz-Expires=604800&X-Amz-Security-Token=eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NLZXkiOiIzRFIzNE1KRlVQUFkwSkZCQjJFWiIsImV4cCI6MTY5ODIyMjQ5NiwicGFyZW50IjoibWluaW8ifQ.adFyKygCg-7HE0kMBWv8pDTDF_7RHjPTndfiOq2v71B4oB8z2YsPdQkGIQ4YzatxiUP2dWlMFWBo1BDoIr6UkQ&X-Amz-SignedHeaders=host&versionId=ab76dd0d-5a6a-439e-91eb-687e41608ef7&X-Amz-Signature=9c7f45d092ec0534f628bb2416b8a99bd13b75ebe40620f7e17dbf6623e92e83',false);
 
 
+--
+-- INSERT INTO satellites (id, date_created, date_formed, date_accepted, status, satellite, user_id, moder_id, user_login) VALUES (1,'2010-01-01','2011-01-01', '2022-01-10', 'создан', 'Planck', 1,2, 'user1');
+-- INSERT INTO satellites (id, date_created, date_formed, date_accepted, status, satellite, user_id, moder_id, user_login) VALUES (2,'2015-05-01','2016-02-01', '2022-02-10', 'создан', 'COBE', 3,2, 'user2');
+-- INSERT INTO satellites (id, date_created, date_formed, date_accepted, status, satellite, user_id, moder_id, user_login) VALUES (3,'2017-04-01','2018-03-01', '2022-03-10', 'создан', 'WMAP', 3,2, 'user3');
+-- INSERT INTO satellites (id, date_created, date_formed, date_accepted, status, satellite, user_id, moder_id, user_login) VALUES (4,'2021-04-01','2022-03-01', '2022-03-10', 'в работе', 'WMAP', 3,2, 'user4');
 
-INSERT INTO satellites (id, date_created, date_formed, date_accepted, status, satellite, user_id, moder_id, user_login) VALUES (1,'2010-01-01','2011-01-01', '2022-01-10', 'создан', 'Planck', 1,2, 'user1');
-INSERT INTO satellites (id, date_created, date_formed, date_accepted, status, satellite, user_id, moder_id, user_login) VALUES (2,'2015-05-01','2016-02-01', '2022-02-10', 'создан', 'COBE', 3,2, 'user2');
-INSERT INTO satellites (id, date_created, date_formed, date_accepted, status, satellite, user_id, moder_id, user_login) VALUES (3,'2017-04-01','2018-03-01', '2022-03-10', 'создан', 'WMAP', 3,2, 'user3');
-INSERT INTO satellites (id, date_created, date_formed, date_accepted, status, satellite, user_id, moder_id, user_login) VALUES (4,'2021-04-01','2022-03-01', '2022-03-10', 'в работе', 'WMAP', 3,2, 'user4');
 
-
-
-INSERT INTO spectrum_requests (satellite_id, spectrum_id, satellite_number) VALUES (1, 1, 1);
-INSERT INTO spectrum_requests (satellite_id, spectrum_id, satellite_number) VALUES (2, 2, 2);
-INSERT INTO spectrum_requests (satellite_id, spectrum_id, satellite_number) VALUES (3, 3, 3);
+--
+-- INSERT INTO spectrum_requests (satellite_id, spectrum_id, satellite_number) VALUES (1, 1, 1);
+-- INSERT INTO spectrum_requests (satellite_id, spectrum_id, satellite_number) VALUES (2, 2, 2);
+-- INSERT INTO spectrum_requests (satellite_id, spectrum_id, satellite_number) VALUES (3, 3, 3);

@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/goccy/go-json"
 	"github.com/golang-jwt/jwt"
 	"net/http"
 	"rip2023/internal/app/ds"
@@ -20,7 +21,7 @@ import (
 // @Tags Пользователи
 // @Accept json
 // @Produce json
-// @Param request body ds.RegisterReq true "Детали входа"
+// @Param request body ds.LoginReq true "Детали входа"
 // @Success 200 {object} ds.LoginSwaggerResp "Успешная аутентификация"
 // @Failure 400 {object} errorResp "Неверный запрос"
 // @Failure 401 {object} errorResp "Неверные учетные данные"
@@ -89,7 +90,7 @@ func (h *Handler) UsersList(ctx *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param request body ds.RegisterReq true "Детали регистрации"
-// @Router /sign_up [post]
+// @Router /signup [post]
 func (h *Handler) Register(ctx *gin.Context) {
 	type registerReq struct {
 		Login    string `json:"login"`
@@ -151,7 +152,6 @@ func (h *Handler) Register(ctx *gin.Context) {
 // @Accept json
 // @Produce json
 // @Security ApiKeyAuth
-// @Param Authorization header string true "Bearer {token}" default("Bearer ")
 // @Success 200 {string} string "Успешный выход"
 // @Failure 400 {object} errorResp "Неверный запрос"
 // @Failure 401 {object} errorResp "Неверные учетные данные"

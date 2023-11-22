@@ -2,13 +2,27 @@ package handler
 
 import (
 	"errors"
-	"rip2023/internal/app/ds"
-
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"rip2023/internal/app/ds"
 	"strconv"
 )
 
+// SatellitesList godoc
+// @Summary Список заявок
+// @Tags Заявки
+// @Security ApiKeyAuth
+// @Description Получение списка заявок с фильтрами по статусу, дате начала и дате окончания, пользователю.
+// @Produce json
+// @Param status query string false "Статус заявки."
+// @Param date_formation_start query string false "Дата начала периода фильтрации в формате '2006-01-02'."
+// @Param date_formation_end query string false "Дата окончания периода фильтрации в формате '2006-01-02'."
+// @Param user_id query int false "ID пользователя"
+// @Success 200 {array} ds.SatellitesListRes "Список заявок"
+// @Success 200 {array} ds.SatellitesListRes2 "Список заявок"
+// @Failure 400 {object} errorResp "Неверный запрос"
+// @Failure 204 {object} errorResp "Нет данных"
+// @Router /Satellites [get]
 func (h *Handler) SatellitesList(ctx *gin.Context) {
 	userID := ctx.DefaultQuery("user_id", "")
 	datestart := ctx.DefaultQuery("date_formation_start", "")
@@ -25,6 +39,17 @@ func (h *Handler) SatellitesList(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, Satellites)
 }
 
+// UsersSatellite godoc
+// @Summary Список заявок пользователя
+// @Tags Заявки
+// @Security ApiKeyAuth
+// @Description Получение списка заявок пользователем.
+// @Produce json
+// @Success 200 {array} ds.SatellitesListRes "Список заявок"
+// @Success 200 {array} ds.SatellitesListRes2 "Список заявок"
+// @Failure 400 {object} errorResp "Неверный запрос"
+// @Failure 204 {object} errorResp "Нет данных"
+// @Router /UsersSatellite [get]
 func (h *Handler) UsersSatellite(ctx *gin.Context) {
 	// Получение значения userid из контекста
 	userID, exists := ctx.Get("user_id")
@@ -61,6 +86,18 @@ func (h *Handler) UsersSatellite(ctx *gin.Context) {
 	h.successHandler(ctx, "Satellite", Satellite)
 }
 
+// DeleteSatellite godoc
+// @Summary Удаление заявки
+// @Security ApiKeyAuth
+// @Tags Заявки
+// @Description Удаление заявки по идентификатору.
+// @Accept json
+// @Produce json
+// @Param request body ds.DeleteSatelliteReq true "Идентификатор заявки для удаления"
+// @Success 200 {object} ds.DeleteSatelliteRes "Успешное удаление заявки"
+// @Failure 400 {object} errorResp "Неверный запрос"
+// @Failure 500 {object} errorResp "Внутренняя ошибка сервера"
+// @Router /Satellites [delete]
 func (h *Handler) DeleteSatellite(ctx *gin.Context) {
 	var request struct {
 		ID uint `json:"id"`
@@ -83,6 +120,18 @@ func (h *Handler) DeleteSatellite(ctx *gin.Context) {
 	//h.SatellitesList(ctx)
 }
 
+// UpdateSatellite godoc
+// @Summary Обновление данных о заявке
+// @Security ApiKeyAuth
+// @Tags Заявки
+// @Description Обновление данных о заявке.
+// @Accept json
+// @Produce json
+// @Param updatedSatellite body ds.UpdateSatelliteReq true "Данные для обновления заявки"
+// @Success 200 {object} ds.UpdatedSatelliteRes "Успешное обновление данных о заявке"
+// @Failure 400 {object} errorResp "Неверный запрос"
+// @Failure 500 {object} errorResp "Внутренняя ошибка сервера"
+// @Router /Satellites [put]
 func (h *Handler) UpdateSatellite(ctx *gin.Context) {
 	var updatedSatellite ds.Satellite
 	if err := ctx.BindJSON(&updatedSatellite); err != nil {
@@ -109,6 +158,19 @@ func (h *Handler) UpdateSatellite(ctx *gin.Context) {
 		"moder_id":      updatedSatellite.ModerID,
 	})
 }
+
+// UsersUpdateSatellite godoc
+// @Summary Обновление данных о заявке пользователем
+// @Security ApiKeyAuth
+// @Tags Заявки
+// @Description Обновление данных о заявке пользователем.
+// @Accept json
+// @Produce json
+// @Param updatedHike body ds.UpdateSatelliteReq true "Данные для обновления заявки пользователем"
+// @Success 200 {object} ds.UpdatedSatelliteRes "Успешное обновление данных о заявке пользователя"
+// @Failure 400 {object} errorResp "Неверный запрос"
+// @Failure 500 {object} errorResp "Внутренняя ошибка сервера"
+// @Router /UsersSatelliteUpdate [put]
 func (h *Handler) UsersUpdateSatellite(ctx *gin.Context) {
 	userID, exists := ctx.Get("user_id")
 	if !exists {
@@ -160,6 +222,19 @@ func (h *Handler) UsersUpdateSatellite(ctx *gin.Context) {
 		"moder_id":      updatedSatellite.ModerID,
 	})
 }
+
+// UserUpdateSatelliteStatusById godoc
+// @Summary Обновление статуса заявки для пользователя.
+// @Security ApiKeyAuth
+// @Tags Заявки
+// @Description Обновление статуса заявки для пользователя.
+// @Accept json
+// @Produce json
+// @Param id path string true "ID заявки"
+// @Success 200 {object} string "Успешное обновление статуса"
+// @Failure 400 {object} errorResp "Неверный запрос"
+// @Failure 500 {object} errorResp "Внутренняя ошибка сервера"
+// @Router /SatellitesUser/{id} [put]
 func (h *Handler) UserUpdateSatelliteStatusById(ctx *gin.Context) {
 	id := ctx.Param("id")
 	idint, err := strconv.Atoi(id)
@@ -178,6 +253,19 @@ func (h *Handler) UserUpdateSatelliteStatusById(ctx *gin.Context) {
 		"status": result.Status,
 	})
 }
+
+// ModerUpdateSatelliteStatusById godoc
+// @Summary Обновление статуса заявки для модератора
+// @Security ApiKeyAuth
+// @Tags Заявки
+// @Description Обновление статуса заявки для модератора.
+// @Accept json
+// @Produce json
+// @Param id path string true "ID заявки"
+// @Success 200 {object} string "Успешное обновление статуса"
+// @Failure 400 {object} errorResp "Неверный запрос"
+// @Failure 500 {object} errorResp "Внутренняя ошибка сервера"
+// @Router /SatellitesModer/{id} [put]
 func (h *Handler) ModerUpdateSatelliteStatusById(ctx *gin.Context) {
 	id := ctx.Param("id")
 	idint, err := strconv.Atoi(id)
@@ -196,6 +284,17 @@ func (h *Handler) ModerUpdateSatelliteStatusById(ctx *gin.Context) {
 		"status": result.Status,
 	})
 }
+
+// SatelliteById godoc
+// @Summary Получение информации о заявке по её ID.
+// @Tags Заявки
+// @Description Получение информации о заявке по его ID.
+// @Produce json
+// @Param id path string true "ID заявки"
+// @Success 200 {object} ds.SatellitesListRes2 "Информация о заявке по ID"
+// @Failure 400 {object} errorResp "Неверный запрос"
+// @Failure 404 {object} errorResp "Заявка не найдена"
+// @Router /Satellites/{id} [get]
 func (h *Handler) SatelliteById(ctx *gin.Context) {
 	id := ctx.Param("id")
 	Satellite, err := h.Repository.SatelliteById(id)

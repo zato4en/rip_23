@@ -1,5 +1,7 @@
 package ds
 
+import "rip2023/internal/app/role"
+
 type Users struct {
 	//gorm.Model
 	ID       uint      `json:"id" gorm:"primary_key"`
