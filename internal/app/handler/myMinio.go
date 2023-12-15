@@ -2,11 +2,10 @@ package handler
 
 import (
 	"fmt"
-	"rip2023/MyMinio"
-	"rip2023/internal/app/utils"
-
 	"github.com/minio/minio-go"
 	"mime/multipart"
+	"rip2023/MyMinio"
+	"rip2023/internal/app/utils"
 )
 
 func (h *Handler) createImageInMinio(file *multipart.File, header *multipart.FileHeader) (string, error) {

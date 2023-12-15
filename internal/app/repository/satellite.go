@@ -140,12 +140,10 @@ func (r *Repository) UserUpdateSatelliteStatusById(id int) (*ds.Satellite, error
 	}
 
 	// Меняем статус тут
-	if Satellite.Status == "черновик" {
-		Satellite.Status = "сформирован"
-	} else if Satellite.Status == "сформирован" {
-		Satellite.Status = "отменён"
+	if Satellite.Status == "создан" {
+		Satellite.Status = "в работе"
 	} else if Satellite.Status == "в работе" {
-		Satellite.Status = "завершен"
+		Satellite.Status = "отменён"
 	}
 
 	// Сохраняем изменения в базе данных
@@ -164,13 +162,11 @@ func (r *Repository) ModerUpdateSatelliteStatusById(id int) (*ds.Satellite, erro
 
 	// Меняем статус тут
 
-	if satellite.Status == "сформирован" {
-		satellite.Status = "в работе"
+	if satellite.Status == "в работе" {
+		satellite.Status = "завершен"
 
-	} else if satellite.Status == "в работе" {
-		satellite.Status = "завершён"
-	} else if satellite.Status != "удалён" && satellite.Status != "отменён" {
-		satellite.Status = "отменён"
+	} else if satellite.Status == "завершен" {
+		satellite.Status = "удален"
 	}
 
 	// Сохраняем изменения в базе данных
@@ -197,11 +193,9 @@ func (r *Repository) UsersUpdateSatellite(updatedSatellite *ds.Satellite, userid
 		oldSatellite.DateAccepted = updatedSatellite.DateAccepted
 	}
 	if updatedSatellite.Status != "" {
-		if updatedSatellite.Status == "сформирован" && oldSatellite.Status == "черновик" {
+		if updatedSatellite.Status == "в работе" && oldSatellite.Status == "создан" {
 			oldSatellite.Status = updatedSatellite.Status
-		} else if updatedSatellite.Status == "отменён" && oldSatellite.Status == "сформирован" {
-			oldSatellite.Status = updatedSatellite.Status
-		} else if updatedSatellite.Status == "завершён" && oldSatellite.Status == "в работе" {
+		} else if updatedSatellite.Status == "отменён" && oldSatellite.Status == "в работе" {
 			oldSatellite.Status = updatedSatellite.Status
 		}
 	}
