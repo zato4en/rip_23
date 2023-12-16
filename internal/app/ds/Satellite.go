@@ -10,6 +10,7 @@ type Satellite struct {
 	DateFormed        time.Time          `json:"date_formed"`
 	DateAccepted      time.Time          `json:"date_accepted"`
 	Status            string             `gorm:"type:varchar(255)" json:"status"`
+	Percentage        string             `gorm:"type:varchar(255)" json:"percentage"`
 	Satellite         string             `gorm:"type:varchar(255)" json:"satellite"`
 	UserID            uint               `json:"user_id"`
 	ModerID           uint               `json:"moder_id"`

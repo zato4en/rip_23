@@ -1,5 +1,5 @@
 --
--- INSERT INTO users (login, password, is_admin) VALUES ('user1', 'user1', false);
+INSERT INTO users (user_name, login, password, role) VALUES ('aboba','user1', 'user1', 0);
 -- INSERT INTO users (login, password, is_admin) VALUES ('user4', 'admin', true);
 -- INSERT INTO users (login, password, is_admin) VALUES ('user2', 'user2', false);
 -- INSERT INTO users (login, password, is_admin) VALUES ('user3', 'user3',false);
@@ -14,10 +14,9 @@ INSERT INTO spectrums (name, len , freq, Description,  Image  ,is_delete) VALUES
 
 
 --
--- INSERT INTO satellites (id, date_created, date_formed, date_accepted, status, satellite, user_id, moder_id, user_login) VALUES (1,'2010-01-01','2011-01-01', '2022-01-10', 'создан', 'Planck', 1,2, 'user1');
--- INSERT INTO satellites (id, date_created, date_formed, date_accepted, status, satellite, user_id, moder_id, user_login) VALUES (2,'2015-05-01','2016-02-01', '2022-02-10', 'создан', 'COBE', 3,2, 'user2');
--- INSERT INTO satellites (id, date_created, date_formed, date_accepted, status, satellite, user_id, moder_id, user_login) VALUES (3,'2017-04-01','2018-03-01', '2022-03-10', 'создан', 'WMAP', 3,2, 'user3');
--- INSERT INTO satellites (id, date_created, date_formed, date_accepted, status, satellite, user_id, moder_id, user_login) VALUES (4,'2021-04-01','2022-03-01', '2022-03-10', 'в работе', 'WMAP', 3,2, 'user4');
+INSERT INTO satellites (id, date_created, date_formed, date_accepted, status, percentage, satellite, user_id, moder_id, user_login) VALUES (1,'2010-01-01','2011-01-01', '2022-01-10', 'создан', '0%' ,'Planck', 1,2, 'user1');
+INSERT INTO satellites (id, date_created, date_formed, date_accepted, status, percentage, satellite, user_id, moder_id, user_login) VALUES (2,'2010-01-01','2011-01-01', '2022-01-10', 'создан', '0%' ,'mem', 1,2, 'user1');
+INSERT INTO satellites (id, date_created, date_formed, date_accepted, status, percentage, satellite, user_id, moder_id, user_login) VALUES (3,'2010-01-01','2011-01-01', '2022-01-10', 'создан', '0%' ,'test', 1,2, 'user1');
 
 
 --

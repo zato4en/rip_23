@@ -59,6 +59,7 @@ func (h *Handler) SatelliteCRUD(router *gin.Engine) {
 	router.GET("/Satellites/:id", h.WithAuthCheck(role.Manager, role.Admin), h.SatelliteById)
 	router.DELETE("/Satellites", h.WithAuthCheck(role.Manager, role.Admin), h.DeleteSatellite)
 	router.PUT("/Satellites", h.WithIdCheck(role.Manager, role.Admin), h.UpdateSatellite)
+	router.PUT("/SatellitesAsyncStatus/:id", h.UpdateSatelliteAsyncStatus)
 	router.PUT("/SatellitesUser/:id", h.WithAuthCheck(role.Buyer), h.UserUpdateSatelliteStatusById)
 	router.PUT("/SatellitesModer/:id", h.WithAuthCheck(role.Manager, role.Admin), h.ModerUpdateSatelliteStatusById)
 	router.GET("/UsersSatellite", h.WithIdCheck(role.Buyer, role.Manager, role.Admin), h.UsersSatellite)

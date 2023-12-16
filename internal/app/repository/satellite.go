@@ -107,6 +107,22 @@ func (r *Repository) UpdateSatellite(updatedSatellite *ds.Satellite) error {
 	return result.Error
 }
 
+func (r *Repository) UpdateSatelliteAsyncStatus(satelliteID int, percentage string) error {
+	// Поиск существующего объекта Satellite по ID
+	existingSatellite := ds.Satellite{}
+	iduint := uint(satelliteID)
+	if result := r.db.First(&existingSatellite, iduint); result.Error != nil {
+		return result.Error
+	}
+
+	// Обновление поля asyncStatus в найденной записи
+	existingSatellite.Percentage = percentage
+
+	// Сохранение изменений в базу данных
+	result := r.db.Save(&existingSatellite)
+	return result.Error
+}
+
 func (r *Repository) UpdateSatelliteStatus(updatedSatellite *ds.Satellite) error {
 	oldSatellite := ds.Satellite{}
 	if result := r.db.First(&oldSatellite, updatedSatellite.ID); result.Error != nil {

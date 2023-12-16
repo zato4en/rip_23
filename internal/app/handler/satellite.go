@@ -120,6 +120,32 @@ func (h *Handler) DeleteSatellite(ctx *gin.Context) {
 	//h.SatellitesList(ctx)
 }
 
+func (h *Handler) UpdateSatelliteAsyncStatus(ctx *gin.Context) {
+	var req struct {
+		Percentage string `json:"percentage"`
+	}
+	id := ctx.Param("id")
+	idint, err := strconv.Atoi(id)
+	if err != nil {
+		h.errorHandler(ctx, http.StatusBadRequest, idNotFound)
+		return
+	}
+	//fmt.Println(req.SatelliteID)
+	//fmt.Println(req.Percentage)
+	if err := ctx.BindJSON(&req); err != nil {
+		h.errorHandler(ctx, http.StatusBadRequest, err)
+		return
+	}
+	if err := h.Repository.UpdateSatelliteAsyncStatus(idint, req.Percentage); err != nil {
+		h.errorHandler(ctx, http.StatusInternalServerError, err)
+		return
+	}
+	h.successHandler(ctx, "percentage_updated", gin.H{
+		"satellite_id": idint,
+		"Percentage":   req.Percentage,
+	})
+}
+
 // UpdateSatellite godoc
 // @Summary Обновление данных о заявке
 // @Security ApiKeyAuth
