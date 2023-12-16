@@ -48,28 +48,28 @@ func (h *Handler) UserCRUD(router *gin.Engine) {
 	router.GET("/logout", h.Logout)
 }
 func (h *Handler) SpectrumCRUD(router *gin.Engine) {
-	router.GET("/api/Spectrums", h.WithoutAuthCheck(role.Buyer, role.Manager, role.Admin), h.SpectrumsList)
-	router.GET("/api/Spectrums/:id", h.SpectrumById)
-	router.POST("/api/Spectrums", h.WithAuthCheck(role.Manager, role.Admin), h.AddSpectrum)
-	router.PUT("/api/Spectrums/:id", h.WithAuthCheck(role.Manager, role.Admin), h.UpdateSpectrum)
-	router.DELETE("/api/Spectrums", h.WithAuthCheck(role.Manager, role.Admin), h.DeleteSpectrum)
+	router.GET("/Spectrums", h.WithoutAuthCheck(role.Buyer, role.Manager, role.Admin), h.SpectrumsList)
+	router.GET("/Spectrum/:id", h.SpectrumById)
+	router.POST("/Spectrums", h.WithAuthCheck(role.Manager, role.Admin), h.AddSpectrum)
+	router.PUT("/Spectrums/:id", h.WithAuthCheck(role.Manager, role.Admin), h.UpdateSpectrum)
+	router.DELETE("/Spectrums", h.WithAuthCheck(role.Manager, role.Admin), h.DeleteSpectrum)
 }
 func (h *Handler) SatelliteCRUD(router *gin.Engine) {
-	router.GET("/api/Satellites", h.WithAuthCheck(role.Manager, role.Admin), h.SatellitesList)
-	router.GET("/api/Satellites/:id", h.WithAuthCheck(role.Manager, role.Admin), h.SatelliteById)
-	router.DELETE("/api/Satellites", h.WithAuthCheck(role.Manager, role.Admin), h.DeleteSatellite)
-	router.PUT("/api/Satellites", h.WithIdCheck(role.Manager, role.Admin), h.UpdateSatellite)
-	router.PUT("/api/SatellitesAsyncStatus/:id", h.UpdateSatelliteAsyncStatus)
-	router.PUT("/api/SatellitesUser/:id", h.WithAuthCheck(role.Buyer), h.UserUpdateSatelliteStatusById)
-	router.PUT("/api/SatellitesModer/:id", h.WithAuthCheck(role.Manager, role.Admin), h.ModerUpdateSatelliteStatusById)
-	router.GET("/api/UsersSatellite", h.WithIdCheck(role.Buyer, role.Manager, role.Admin), h.UsersSatellite)
-	router.PUT("/api/UsersSatelliteUpdate", h.WithIdCheck(role.Buyer, role.Manager, role.Admin), h.UsersUpdateSatellite)
+	router.GET("/Satellites", h.WithAuthCheck(role.Manager, role.Admin), h.SatellitesList)
+	router.GET("/Satellites/:id", h.WithAuthCheck(role.Manager, role.Admin), h.SatelliteById)
+	router.DELETE("/Satellites", h.WithAuthCheck(role.Manager, role.Admin), h.DeleteSatellite)
+	router.PUT("/Satellites", h.WithIdCheck(role.Manager, role.Admin), h.UpdateSatellite)
+	router.PUT("/SatellitesAsyncStatus/:id", h.UpdateSatelliteAsyncStatus)
+	router.PUT("/SatellitesUser/:id", h.WithAuthCheck(role.Buyer), h.UserUpdateSatelliteStatusById)
+	router.PUT("/SatellitesModer/:id", h.WithAuthCheck(role.Manager, role.Admin), h.ModerUpdateSatelliteStatusById)
+	router.GET("/UsersSatellite", h.WithIdCheck(role.Buyer, role.Manager, role.Admin), h.UsersSatellite)
+	router.PUT("/UsersSatelliteUpdate", h.WithIdCheck(role.Buyer, role.Manager, role.Admin), h.UsersUpdateSatellite)
 }
 func (h *Handler) SpectrumsRequestsCRUD(router *gin.Engine) {
-	router.POST("/api/SpectrumsRequests", h.WithIdCheck(role.Buyer, role.Manager, role.Admin), h.AddSpectrumToRequest)
-	router.DELETE("/api/SpectrumsRequests", h.WithAuthCheck(role.Buyer, role.Manager, role.Admin), h.DeleteSpectrumRequest)
-	router.PUT("/api/SpectrumsRequests", h.WithAuthCheck(role.Buyer, role.Manager, role.Admin), h.UpdateSpectrumNumberInRequest)
-	router.GET("/api/ping", h.WithAuthCheck(role.Manager, role.Admin), h.Ping)
+	router.POST("/SpectrumsRequests", h.WithIdCheck(role.Buyer, role.Manager, role.Admin), h.AddSpectrumToRequest)
+	router.DELETE("/SpectrumsRequests", h.WithAuthCheck(role.Buyer, role.Manager, role.Admin), h.DeleteSpectrumRequest)
+	router.PUT("/SpectrumsRequests", h.WithAuthCheck(role.Buyer, role.Manager, role.Admin), h.UpdateSpectrumNumberInRequest)
+	router.GET("/ping", h.WithAuthCheck(role.Manager, role.Admin), h.Ping)
 }
 
 func registerStatic(router *gin.Engine) {
