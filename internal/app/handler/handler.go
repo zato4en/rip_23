@@ -49,7 +49,7 @@ func (h *Handler) UserCRUD(router *gin.Engine) {
 }
 func (h *Handler) SpectrumCRUD(router *gin.Engine) {
 	router.GET("/Spectrums", h.WithoutAuthCheck(role.Buyer, role.Manager, role.Admin), h.SpectrumsList)
-	router.GET("/Spectrum/:id", h.SpectrumById)
+	router.GET("/Spectrums/:id", h.SpectrumById)
 	router.POST("/Spectrums", h.WithAuthCheck(role.Manager, role.Admin), h.AddSpectrum)
 	router.PUT("/Spectrums/:id", h.WithAuthCheck(role.Manager, role.Admin), h.UpdateSpectrum)
 	router.DELETE("/Spectrums", h.WithAuthCheck(role.Manager, role.Admin), h.DeleteSpectrum)
