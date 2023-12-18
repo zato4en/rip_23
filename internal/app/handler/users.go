@@ -41,6 +41,7 @@ func (h *Handler) Login(ctx *gin.Context) {
 		return
 	}
 
+	fmt.Println(req.Login, user.Login, user.Password, generateHashString(req.Password))
 	if req.Login == user.Login && user.Password == generateHashString(req.Password) {
 		token := jwt.NewWithClaims(cfg.JWT.SigningMethod, &ds.JWTClaims{
 			StandardClaims: jwt.StandardClaims{

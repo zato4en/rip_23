@@ -120,26 +120,39 @@ func (h *Handler) DeleteSatellite(ctx *gin.Context) {
 	//h.SatellitesList(ctx)
 }
 
+// Импортируем пакет errors
+
 func (h *Handler) UpdateSatelliteAsyncStatus(ctx *gin.Context) {
 	var req struct {
 		Percentage string `json:"percentage"`
+		Passkey    string `json:"passkey"`
 	}
+
+	if err := ctx.BindJSON(&req); err != nil {
+		h.errorHandler(ctx, http.StatusBadRequest, errors.New("error parsing request body"))
+		return
+	}
+
+	if req.Passkey != "password" {
+		h.errorHandler(ctx, http.StatusForbidden, errors.New("invalid passkey"))
+		return
+	}
+
 	id := ctx.Param("id")
 	idint, err := strconv.Atoi(id)
 	if err != nil {
-		h.errorHandler(ctx, http.StatusBadRequest, idNotFound)
+		h.errorHandler(ctx, http.StatusBadRequest, errors.New("id not found"))
 		return
 	}
-	//fmt.Println(req.SatelliteID)
-	//fmt.Println(req.Percentage)
-	if err := ctx.BindJSON(&req); err != nil {
-		h.errorHandler(ctx, http.StatusBadRequest, err)
+	if len(req.Percentage) == 0 {
+		h.errorHandler(ctx, http.StatusBadRequest, errors.New("percentage not found"))
 		return
 	}
 	if err := h.Repository.UpdateSatelliteAsyncStatus(idint, req.Percentage); err != nil {
-		h.errorHandler(ctx, http.StatusInternalServerError, err)
+		h.errorHandler(ctx, http.StatusInternalServerError, errors.New("error updating status"))
 		return
 	}
+
 	h.successHandler(ctx, "percentage_updated", gin.H{
 		"satellite_id": idint,
 		"Percentage":   req.Percentage,

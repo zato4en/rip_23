@@ -42,7 +42,7 @@ func (h *Handler) RegisterHandler(router *gin.Engine) {
 	registerStatic(router)
 }
 func (h *Handler) UserCRUD(router *gin.Engine) {
-	router.GET("/users", h.UsersList)
+	router.GET("/users", h.WithAuthCheck(role.Manager, role.Admin), h.UsersList)
 	router.POST("/login", h.Login)
 	router.POST("/signup", h.Register)
 	router.GET("/logout", h.Logout)
