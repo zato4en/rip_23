@@ -148,6 +148,7 @@ func (h *Handler) UpdateSatelliteAsyncStatus(ctx *gin.Context) {
 		h.errorHandler(ctx, http.StatusBadRequest, errors.New("percentage not found"))
 		return
 	}
+	//koment
 	if err := h.Repository.UpdateSatelliteAsyncStatus(idint, req.Percentage); err != nil {
 		h.errorHandler(ctx, http.StatusInternalServerError, errors.New("error updating status"))
 		return
