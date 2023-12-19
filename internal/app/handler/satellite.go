@@ -10,8 +10,8 @@ import (
 
 func (h *Handler) SatellitesList(ctx *gin.Context) {
 	userID := ctx.DefaultQuery("user_id", "")
-	datestart := ctx.DefaultQuery("date_formation_start", "")
-	dateend := ctx.DefaultQuery("date_formation_end", "")
+	datestart := ctx.DefaultQuery("date_start", "")
+	dateend := ctx.DefaultQuery("date_end", "")
 	status := ctx.DefaultQuery("status", "")
 
 	Satellites, err := h.Repository.SatellitesList(userID, datestart, dateend, status)

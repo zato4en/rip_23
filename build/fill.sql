@@ -14,10 +14,10 @@ INSERT INTO spectrums (len , freq, Description,  Image  ,is_delete) VALUES (7.35
 
 
 
-INSERT INTO satellites (id, date_created, date_formed, date_accepted, status, satellite, user_id, moder_id, user_login) VALUES (1,'2010-01-01','2011-01-01', '2022-01-10', 'создан', 'Planck', 1,2, 'user1');
-INSERT INTO satellites (id, date_created, date_formed, date_accepted, status, satellite, user_id, moder_id, user_login) VALUES (2,'2015-05-01','2016-02-01', '2022-02-10', 'создан', 'COBE', 3,2, 'user2');
-INSERT INTO satellites (id, date_created, date_formed, date_accepted, status, satellite, user_id, moder_id, user_login) VALUES (3,'2017-04-01','2018-03-01', '2022-03-10', 'создан', 'WMAP', 3,2, 'user3');
-INSERT INTO satellites (id, date_created, date_formed, date_accepted, status, satellite, user_id, moder_id, user_login) VALUES (4,'2021-04-01','2022-03-01', '2022-03-10', 'в работе', 'WMAP', 3,2, 'user4');
+INSERT INTO satellites (id, date_created, date_formed, date_accepted, status, satellite, user_id, moder_id, user_login) VALUES (1,'2010-01-01','2011-01-01', '0001-01-01', 'создан', 'Planck', 1,2, 'user1');
+INSERT INTO satellites (id, date_created, date_formed, date_accepted, status, satellite, user_id, moder_id, user_login) VALUES (2,'2015-05-01','2016-02-01', '0001-01-01', 'создан', 'COBE', 3,2, 'user2');
+INSERT INTO satellites (id, date_created, date_formed, date_accepted, status, satellite, user_id, moder_id, user_login) VALUES (3,'2017-04-01','2018-03-01', '0001-01-01', 'создан', 'WMAP', 3,2, 'user3');
+
 
 
 

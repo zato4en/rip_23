@@ -28,8 +28,8 @@ func (h *Handler) SpectrumsList(ctx *gin.Context) {
 			return
 		}
 		ctx.JSON(http.StatusOK, gin.H{
-			"Spectrums": Spectrums,
-			"Flight_id": userRequestID,
+			"Spectrums":    Spectrums,
+			"Satellite_id": userRequestID,
 		})
 	} else {
 		filteredSpectrums, err := h.Repository.SearchSpectrum(searchQuery)
