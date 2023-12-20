@@ -69,14 +69,14 @@ func (r *Repository) UpdateSatellite(updatedSatellite *ds.Satellite) error {
 	if result := r.db.First(&oldSatellite, updatedSatellite.ID); result.Error != nil {
 		return result.Error
 	}
-	if updatedSatellite.DateCreated.String() != utils.EmptyDate {
-		oldSatellite.DateCreated = updatedSatellite.DateCreated
+	if updatedSatellite.DateCreate.String() != utils.EmptyDate {
+		oldSatellite.DateCreate = updatedSatellite.DateCreate
 	}
-	if updatedSatellite.DateFormed.String() != utils.EmptyDate {
-		oldSatellite.DateFormed = updatedSatellite.DateFormed
+	if updatedSatellite.DateFormation.String() != utils.EmptyDate {
+		oldSatellite.DateFormation = updatedSatellite.DateFormation
 	}
-	if updatedSatellite.DateAccepted.String() != utils.EmptyDate {
-		oldSatellite.DateAccepted = updatedSatellite.DateAccepted
+	if updatedSatellite.DateCompletion.String() != utils.EmptyDate {
+		oldSatellite.DateCompletion = updatedSatellite.DateCompletion
 	}
 
 	if updatedSatellite.Status != "" {
@@ -199,14 +199,14 @@ func (r *Repository) UsersUpdateSatellite(updatedSatellite *ds.Satellite, userid
 	if result.Error != nil {
 		return result.Error
 	}
-	if updatedSatellite.DateCreated.String() != utils.EmptyDate {
-		oldSatellite.DateCreated = updatedSatellite.DateCreated
+	if updatedSatellite.DateCreate.String() != utils.EmptyDate {
+		oldSatellite.DateCreate = updatedSatellite.DateCreate
 	}
-	if updatedSatellite.DateFormed.String() != utils.EmptyDate {
-		oldSatellite.DateFormed = updatedSatellite.DateFormed
+	if updatedSatellite.DateFormation.String() != utils.EmptyDate {
+		oldSatellite.DateFormation = updatedSatellite.DateFormation
 	}
-	if updatedSatellite.DateAccepted.String() != utils.EmptyDate {
-		oldSatellite.DateAccepted = updatedSatellite.DateAccepted
+	if updatedSatellite.DateCompletion.String() != utils.EmptyDate {
+		oldSatellite.DateCompletion = updatedSatellite.DateCompletion
 	}
 	if updatedSatellite.Status != "" {
 		if updatedSatellite.Status == "в работе" && oldSatellite.Status == "создан" {

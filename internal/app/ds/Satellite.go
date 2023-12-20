@@ -6,9 +6,9 @@ import (
 
 type Satellite struct {
 	ID                uint               `json:"id" gorm:"primaryKey"`
-	DateCreated       time.Time          `json:"date_created"`
-	DateFormed        time.Time          `json:"date_formed"`
-	DateAccepted      time.Time          `json:"date_accepted"`
+	DateCreate        time.Time          `json:"date_create"`
+	DateFormation     time.Time          `json:"date_formation"`
+	DateCompletion    time.Time          `json:"date_completion"`
 	Status            string             `gorm:"type:varchar(255)" json:"status"`
 	Percentage        string             `gorm:"type:varchar(255)" json:"percentage"`
 	Satellite         string             `gorm:"type:varchar(255)" json:"satellite"`

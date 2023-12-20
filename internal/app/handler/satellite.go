@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"rip2023/internal/app/ds"
 	"strconv"
+	"time"
 )
 
 // SatellitesList godoc
@@ -26,19 +27,86 @@ import (
 // @Failure 204 {object} errorResp "Нет данных"
 // @Router /Satellites [get]
 func (h *Handler) SatellitesList(ctx *gin.Context) {
-	userID := ctx.DefaultQuery("user_id", "")
-	datestart := ctx.DefaultQuery("date_formation_start", "")
-	dateend := ctx.DefaultQuery("date_formation_end", "")
-	status := ctx.DefaultQuery("status", "")
-
-	Satellites, err := h.Repository.SatellitesList(userID, datestart, dateend, status)
-
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch Satellites"})
+	// Получение значения userid из контекста
+	userID, exists := ctx.Get("user_id")
+	if !exists {
+		// Обработка ситуации, когда userid отсутствует в контексте
+		h.errorHandler(ctx, http.StatusInternalServerError, errors.New("user_id not found in context"))
 		return
 	}
 
-	ctx.JSON(http.StatusOK, Satellites)
+	// Приведение типа, если необходимо
+	var userIDUint uint
+	switch v := userID.(type) {
+	case uint:
+		userIDUint = v
+	case int:
+		userIDUint = uint(v)
+	case string:
+		i, err := strconv.Atoi(v)
+		if err != nil {
+			h.errorHandler(ctx, http.StatusInternalServerError, errors.New("failed to convert user_id to uint"))
+			return
+		}
+		userIDUint = uint(i)
+	default:
+		h.errorHandler(ctx, http.StatusInternalServerError, errors.New("user_id is not of a supported type"))
+		return
+	}
+	var thisUser *ds.Users
+	thisUser = h.Repository.GetUserById(userIDUint)
+	if thisUser.Role == 0 {
+		Satellite, err := h.Repository.UsersSatellite(userIDUint)
+		if err != nil {
+			h.errorHandler(ctx, http.StatusNoContent, err)
+			return
+		}
+		h.successHandler(ctx, "Satellite", Satellite)
+
+	} else {
+		userlogin := ctx.DefaultQuery("user_login", "")
+		datestart := ctx.DefaultQuery("date_formation_start", "")
+		dateend := ctx.DefaultQuery("date_formation_end", "")
+		status := ctx.DefaultQuery("status", "")
+
+		Satellites, err := h.Repository.SatellitesList(userlogin, datestart, dateend, status)
+
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch Satellites"})
+			return
+		}
+
+		type SatelliteResponse struct {
+			ID             uint      `json:"id"`
+			DateCreate     time.Time `json:"date_create"`
+			DateFormation  time.Time `json:"date_formation"`
+			DateCompletion time.Time `json:"date_completion"`
+			Status         string    `json:"status"`
+			Satellite      string    `json:"satellite"`
+			ModerLogin     string    `json:"moder_login"`
+			UserLogin      string    `json:"user_login"`
+			Percentage     string    `json:"percentage"`
+		}
+
+		SatelliteResponses := []SatelliteResponse{}
+		for _, Satellite := range *Satellites {
+			SatelliteResponse := SatelliteResponse{
+				ID:             Satellite.ID,
+				DateCreate:     Satellite.DateCreate,
+				DateFormation:  Satellite.DateFormation,
+				DateCompletion: Satellite.DateCompletion,
+				Status:         Satellite.Status,
+				ModerLogin:     Satellite.ModerLogin,
+				UserLogin:      Satellite.UserLogin,
+				Percentage:     Satellite.Percentage,
+			}
+			SatelliteResponses = append(SatelliteResponses, SatelliteResponse)
+		}
+
+		// Отправка измененного JSON-ответа без user_id и moder_id
+		ctx.JSON(http.StatusOK, SatelliteResponses)
+
+	}
 }
 
 // UsersSatellite godoc
@@ -191,9 +259,9 @@ func (h *Handler) UpdateSatellite(ctx *gin.Context) {
 
 	h.successHandler(ctx, "updated_Satellite", gin.H{
 		"id":            updatedSatellite.ID,
-		"date_created":  updatedSatellite.DateCreated,
-		"date_formed":   updatedSatellite.DateFormed,
-		"date_accepted": updatedSatellite.DateAccepted,
+		"date_created":  updatedSatellite.DateCreate,
+		"date_formed":   updatedSatellite.DateFormation,
+		"date_accepted": updatedSatellite.DateCompletion,
 		"status":        updatedSatellite.Status,
 		"satellite":     updatedSatellite.Satellite,
 		"user_id":       updatedSatellite.UserID,
@@ -255,9 +323,9 @@ func (h *Handler) UsersUpdateSatellite(ctx *gin.Context) {
 
 	h.successHandler(ctx, "updated_Satellite", gin.H{
 		"id":            updatedSatellite.ID,
-		"date_created":  updatedSatellite.DateCreated,
-		"date_formed":   updatedSatellite.DateFormed,
-		"date_accepted": updatedSatellite.DateAccepted,
+		"date_created":  updatedSatellite.DateCreate,
+		"date_formed":   updatedSatellite.DateFormation,
+		"date_accepted": updatedSatellite.DateCompletion,
 		"status":        updatedSatellite.Status,
 		"satellite":     updatedSatellite.Satellite,
 		"user_id":       updatedSatellite.UserID,
