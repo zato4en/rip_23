@@ -34,7 +34,7 @@ func NewHandler(l *logrus.Logger, r *repository.Repository, m *minio.Client, con
 
 func (h *Handler) RegisterHandler(router *gin.Engine) {
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-
+	///
 	h.UserCRUD(router)
 	h.SpectrumCRUD(router)
 	h.SatelliteCRUD(router)
