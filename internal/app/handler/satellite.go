@@ -172,6 +172,7 @@ func (h *Handler) DeleteSatellite(ctx *gin.Context) {
 	var request struct {
 		ID uint `json:"id"`
 	}
+	//
 	if err := ctx.BindJSON(&request); err != nil {
 		h.errorHandler(ctx, http.StatusBadRequest, err)
 		return

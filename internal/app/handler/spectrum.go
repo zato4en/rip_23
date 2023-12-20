@@ -218,7 +218,7 @@ func (h *Handler) UpdateSpectrum(ctx *gin.Context) {
 
 }
 
-// asd
+// asd=
 func (h *Handler) updateSpectrum(Spectrum *ds.Spectrum) (int, error) {
 	if Spectrum.ID == 0 {
 		return http.StatusBadRequest, idNotFound
