@@ -1,8 +1,10 @@
 package handler
 
 import (
+	"bytes"
 	"errors"
 	"github.com/gin-gonic/gin"
+	"github.com/goccy/go-json"
 	"net/http"
 	"rip2023/internal/app/ds"
 	"strconv"
@@ -277,6 +279,35 @@ func (h *Handler) UsersUpdateSatellite(ctx *gin.Context) {
 // @Router /SatellitesUser/{id} [put]
 func (h *Handler) UserUpdateSatelliteStatusById(ctx *gin.Context) {
 	id := ctx.Param("id")
+
+	// Создаем структуру для запроса
+	requestBody, err := json.Marshal(map[string]string{
+		"satellite_id": id,
+	})
+	if err != nil {
+		// Обработка ошибки маршалинга JSON
+		ctx.String(http.StatusInternalServerError, "Error creating request body: %v", err)
+		return
+	}
+
+	// Отправляем запрос на внешний сервис
+	resp, err := http.Post("http://localhost:8000/start-async-update/", "application/json", bytes.NewBuffer(requestBody))
+	if err != nil {
+		// Обработка ошибки выполнения запроса
+		ctx.String(http.StatusInternalServerError, "Error sending request to the external service: %v", err)
+		return
+	}
+	defer resp.Body.Close()
+
+	// Проверяем статус ответа
+	if resp.StatusCode != http.StatusOK {
+		// Обработка случая, когда внешний сервис вернул ошибку
+		ctx.String(resp.StatusCode, "External service returned: %s", resp.Status)
+		return
+	}
+
+	// Все хорошо, возвращаем HTTP статус 200 OK
+	ctx.Status(http.StatusOK)
 	idint, err := strconv.Atoi(id)
 	if err != nil {
 		h.errorHandler(ctx, http.StatusBadRequest, idNotFound)
