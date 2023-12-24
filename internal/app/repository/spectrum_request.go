@@ -35,7 +35,7 @@ func (r *Repository) AddSpectrumToRequest(pr *struct {
 	r.db.Where("user_id = ?", userId).First(&satellite)
 
 	if satellite.ID == 0 {
-		newRequest := ds.Satellite{UserID: userId, Status: "черновик"}
+		newRequest := ds.Satellite{UserID: userId, Status: "создан"}
 		r.db.Create(&newRequest)
 		satellite = newRequest
 	}

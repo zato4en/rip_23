@@ -61,7 +61,7 @@ func (h *Handler) SatellitesList(ctx *gin.Context) {
 			h.errorHandler(ctx, http.StatusNoContent, err)
 			return
 		}
-		h.successHandler(ctx, "Satellite", Satellite)
+		h.successHandler(ctx, "Satellites", Satellite)
 
 	} else {
 		userlogin := ctx.DefaultQuery("user_login", "")
@@ -104,7 +104,8 @@ func (h *Handler) SatellitesList(ctx *gin.Context) {
 		}
 
 		// Отправка измененного JSON-ответа без user_id и moder_id
-		ctx.JSON(http.StatusOK, SatelliteResponses)
+		//ctx.JSON(http.StatusOK, SatelliteResponses)
+		h.successHandler(ctx, "Satellites", SatelliteResponses)
 
 	}
 }

@@ -17,7 +17,7 @@ func (r *Repository) SearchSpectrum(search string) (*[]ds.Spectrum, error) {
 
 	var filteredSpectrums []ds.Spectrum
 	for _, Spectrum := range Spectrums {
-		if strings.Contains(strings.ToLower(Spectrum.Description), strings.ToLower(search)) {
+		if strings.Contains(strings.ToLower(Spectrum.Name), strings.ToLower(search)) {
 			filteredSpectrums = append(filteredSpectrums, Spectrum)
 		}
 	}
