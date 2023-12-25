@@ -86,7 +86,7 @@ func (r *Repository) UpdateSpectrumImage(id string, newImageURL string) error {
 
 func (r *Repository) GetUserRequestID(userID int) (int, error) {
 	var userRequestID int
-	err := r.db.Table("satellites").Select("user_id").Where("user_id = ? AND status = ?", userID, "создан").Scan(&userRequestID).Error
+	err := r.db.Table("satellites").Select("id").Where("user_id = ? and status = ?", userID, "черновик").Scan(&userRequestID).Error
 	if err != nil {
 		return 0, err
 	}

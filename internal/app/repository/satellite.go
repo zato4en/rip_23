@@ -3,6 +3,7 @@ package repository
 import (
 	"rip2023/internal/app/ds"
 	"rip2023/internal/app/utils"
+	"time"
 )
 
 func (r *Repository) SatellitesList(userID, datestart, dateend, status string) (*[]ds.Satellite, error) {
@@ -44,7 +45,7 @@ func (r *Repository) DeleteSatellite(id uint) error {
 }
 func (r *Repository) UsersSatellite(userid uint) (*[]ds.Satellite, error) {
 	var satellite []ds.Satellite
-	result := r.db.Preload("User").Preload("Spectrum_requests.Spectrum").Where("user_id = ?", userid).Find(&satellite)
+	result := r.db.Preload("User").Preload("Spectrum_requests.Spectrum").Where("user_id = ? and status != ?", userid, "черновик").Find(&satellite)
 	return &satellite, result.Error
 }
 func (r *Repository) SatellitesListByDate(datestart, dateend string) (*[]ds.Satellite, error) {
@@ -80,16 +81,16 @@ func (r *Repository) UpdateSatellite(updatedSatellite *ds.Satellite) error {
 	}
 
 	if updatedSatellite.Status != "" {
-		if updatedSatellite.Status == "в работе" && oldSatellite.Status == "создан" {
+		if updatedSatellite.Status == "в работе" && oldSatellite.Status == "черновик" {
 			oldSatellite.Status = updatedSatellite.Status
 		}
-		if updatedSatellite.Status == "завёршён" && oldSatellite.Status == "в работе" {
+		if updatedSatellite.Status == "завершен" && oldSatellite.Status == "в работе" {
 			oldSatellite.Status = updatedSatellite.Status
 		}
-		if updatedSatellite.Status == "удалён" && oldSatellite.Status == "отменён" {
+		if updatedSatellite.Status == "удален" && oldSatellite.Status == "отменен" {
 			oldSatellite.Status = updatedSatellite.Status
 		}
-		if updatedSatellite.Status == "отменён" && oldSatellite.Status != "удалён" {
+		if updatedSatellite.Status == "отменен" && oldSatellite.Status != "удален" {
 			oldSatellite.Status = updatedSatellite.Status
 		}
 	}
@@ -129,16 +130,16 @@ func (r *Repository) UpdateSatelliteStatus(updatedSatellite *ds.Satellite) error
 		return result.Error
 	}
 	if updatedSatellite.Status != "" {
-		if updatedSatellite.Status == "в работе" && oldSatellite.Status == "создан" {
+		if updatedSatellite.Status == "в работе" && oldSatellite.Status == "черновик" {
 			oldSatellite.Status = updatedSatellite.Status
 		}
-		if updatedSatellite.Status == "завёршён" && oldSatellite.Status == "в работе" {
+		if updatedSatellite.Status == "завершен" && oldSatellite.Status == "в работе" {
 			oldSatellite.Status = updatedSatellite.Status
 		}
-		if updatedSatellite.Status == "удалён" && oldSatellite.Status == "отменён" {
+		if updatedSatellite.Status == "удален" && oldSatellite.Status == "отменен" {
 			oldSatellite.Status = updatedSatellite.Status
 		}
-		if updatedSatellite.Status == "отменён" && oldSatellite.Status != "удалён" {
+		if updatedSatellite.Status == "отменен" && oldSatellite.Status != "удален" {
 			oldSatellite.Status = updatedSatellite.Status
 		}
 
@@ -156,10 +157,11 @@ func (r *Repository) UserUpdateSatelliteStatusById(id int) (*ds.Satellite, error
 	}
 
 	// Меняем статус тут
-	if Satellite.Status == "создан" {
+	if Satellite.Status == "черновик" {
 		Satellite.Status = "в работе"
+		Satellite.DateCreate = time.Now()
 	} else if Satellite.Status == "в работе" {
-		Satellite.Status = "отменён"
+		Satellite.Status = "отменен"
 	}
 
 	// Сохраняем изменения в базе данных
@@ -209,9 +211,9 @@ func (r *Repository) UsersUpdateSatellite(updatedSatellite *ds.Satellite, userid
 		oldSatellite.DateCompletion = updatedSatellite.DateCompletion
 	}
 	if updatedSatellite.Status != "" {
-		if updatedSatellite.Status == "в работе" && oldSatellite.Status == "создан" {
+		if updatedSatellite.Status == "в работе" && oldSatellite.Status == "черновик" {
 			oldSatellite.Status = updatedSatellite.Status
-		} else if updatedSatellite.Status == "отменён" && oldSatellite.Status == "в работе" {
+		} else if updatedSatellite.Status == "отменен" && oldSatellite.Status == "в работе" {
 			oldSatellite.Status = updatedSatellite.Status
 		}
 	}

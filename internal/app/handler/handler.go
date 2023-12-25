@@ -56,9 +56,9 @@ func (h *Handler) SpectrumCRUD(router *gin.Engine) {
 }
 func (h *Handler) SatelliteCRUD(router *gin.Engine) {
 	router.GET("/Satellites", h.WithIdCheck(role.Buyer, role.Manager, role.Admin), h.SatellitesList)
-	router.GET("/Satellites/:id", h.WithIdCheck(role.Manager, role.Admin), h.SatelliteById)
+	router.GET("/Satellites/:id", h.WithIdCheck(role.Buyer, role.Manager, role.Admin), h.SatelliteById)
 	router.DELETE("/Satellites", h.WithAuthCheck(role.Manager, role.Admin), h.DeleteSatellite)
-	router.PUT("/Satellites", h.WithIdCheck(role.Manager, role.Admin), h.UpdateSatellite)
+	router.PUT("/Satellites", h.WithIdCheck(role.Buyer, role.Manager, role.Admin), h.UpdateSatellite)
 	router.PUT("/SatellitesAsyncStatus/:id", h.UpdateSatelliteAsyncStatus)
 	router.PUT("/SatellitesUser/:id", h.WithAuthCheck(role.Buyer), h.UserUpdateSatelliteStatusById)
 	router.PUT("/SatellitesModer/:id", h.WithAuthCheck(role.Manager, role.Admin), h.ModerUpdateSatelliteStatusById)

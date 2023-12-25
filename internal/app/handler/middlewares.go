@@ -98,6 +98,7 @@ func (h *Handler) WithIdCheck(assignedRoles ...role.Role) func(ctx *gin.Context)
 	}
 
 }
+
 func (h *Handler) WithoutAuthCheck(assignedRoles ...role.Role) func(ctx *gin.Context) {
 	return func(gCtx *gin.Context) {
 		jwtStr := gCtx.GetHeader("Authorization")

@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"mime/multipart"
@@ -23,6 +24,31 @@ import (
 // @Failure 500 {object} errorResp "Внутренняя ошибка сервера"
 // @Router /Spectrums [get]
 func (h *Handler) SpectrumsList(ctx *gin.Context) {
+	userID, exists := ctx.Get("user_id")
+	if !exists {
+		// Обработка ситуации, когда userid отсутствует в контексте
+		h.errorHandler(ctx, http.StatusInternalServerError, errors.New("user_id not found in context"))
+		return
+	}
+	// Приведение типа, если необходимо
+	var userIDUint uint
+	switch v := userID.(type) {
+	case uint:
+		userIDUint = v
+	case int:
+		userIDUint = uint(v)
+	case string:
+		i, err := strconv.Atoi(v)
+		if err != nil {
+			h.errorHandler(ctx, http.StatusInternalServerError, errors.New("failed to convert user_id to uint"))
+			return
+		}
+		userIDUint = uint(i)
+	default:
+		h.errorHandler(ctx, http.StatusInternalServerError, errors.New("user_id is not of a supported type"))
+		return
+	}
+
 	searchQuery := ctx.Query("search")
 	if searchQuery == "" {
 		Spectrums, err := h.Repository.SpectrumsList()
@@ -33,7 +59,7 @@ func (h *Handler) SpectrumsList(ctx *gin.Context) {
 			return
 		}
 		// Получаем id заявки пользователя
-		userRequestID, err := h.Repository.GetUserRequestID(1)
+		userRequestID, err := h.Repository.GetUserRequestID(int(userIDUint))
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, gin.H{
 				"error": err.Error(),
@@ -44,7 +70,6 @@ func (h *Handler) SpectrumsList(ctx *gin.Context) {
 			"Spectrums":    Spectrums,
 			"Satellite_id": userRequestID,
 		})
-
 	} else {
 		filteredSpectrums, err := h.Repository.SearchSpectrum(searchQuery)
 		if err != nil {
@@ -54,7 +79,7 @@ func (h *Handler) SpectrumsList(ctx *gin.Context) {
 			return
 		}
 		// Получаем id заявки пользователя
-		userRequestID, err := h.Repository.GetUserRequestID(1)
+		userRequestID, err := h.Repository.GetUserRequestID(int(userIDUint))
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, gin.H{
 				"error": err.Error(),

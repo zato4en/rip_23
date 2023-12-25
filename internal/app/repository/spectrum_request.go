@@ -32,10 +32,10 @@ func (r *Repository) AddSpectrumToRequest(pr *struct {
 }, userId uint) error {
 
 	var satellite ds.Satellite
-	r.db.Where("user_id = ?", userId).First(&satellite)
+	r.db.Where("user_id = ? and status = ?", userId, "черновик").First(&satellite)
 
 	if satellite.ID == 0 {
-		newRequest := ds.Satellite{UserID: userId, Status: "создан"}
+		newRequest := ds.Satellite{UserID: userId, Status: "черновик"}
 		r.db.Create(&newRequest)
 		satellite = newRequest
 	}
