@@ -2,6 +2,7 @@ package repository
 
 import (
 	"rip2023/internal/app/ds"
+	"time"
 )
 
 func (r *Repository) SpectrumRequestsList() (*[]ds.Spectrum_request, error) {
@@ -24,23 +25,20 @@ func (r *Repository) UpdateSpectrumNumberInRequest(updatedSpectrumRequest *ds.Sp
 	return result.Error
 }
 
-// Тут запрос на SQL потому что если через ГОРМ то будет возвращать айди, а у нас нет поля айди в М-М, поэтому через SQL
-// как сделать через ГОРМ тут я без понятия
-// Если у нас не находит заявку с айди которое есть в М-М, то мы создаем заявку с таким айди
 func (r *Repository) AddSpectrumToRequest(pr *struct {
-	SpectrumId uint `json:"spectrum_id"`
-}, userId uint) error {
-
-	var satellite ds.Satellite
-	r.db.Where("user_id = ? and status = ?", userId, "черновик").First(&satellite)
-
-	if satellite.ID == 0 {
-		newRequest := ds.Satellite{UserID: userId, Status: "черновик"}
+	SpectrumId uint `json:"Spectrum_id"`
+}, userid uint) error {
+	var SatelliteRequest ds.Satellite
+	var user ds.Users
+	r.db.Where("user_id = ? AND status = ?", userid, "черновик").First(&SatelliteRequest)
+	r.db.Where("id = ?", userid).First(&user)
+	if SatelliteRequest.ID == 0 {
+		newRequest := ds.Satellite{UserID: user.ID, UserLogin: user.Login, Status: "черновик", DateCreate: time.Now(), Percentage: "0%"}
 		r.db.Create(&newRequest)
-		satellite = newRequest
+		SatelliteRequest = newRequest
 	}
-	query := "INSERT INTO spectrum_requests (satellite_id, spectrum_id) VALUES ($1,$2) ON CONFLICT DO NOTHING;"
-	err := r.db.Exec(query, satellite.ID, pr.SpectrumId)
+	query := "INSERT INTO Spectrum_requests (Satellite_id, Spectrum_id) VALUES ($1,$2) ON CONFLICT DO NOTHING;"
+	err := r.db.Exec(query, SatelliteRequest.ID, pr.SpectrumId)
 	if err != nil {
 		return err.Error
 	}

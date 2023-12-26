@@ -159,7 +159,7 @@ func (r *Repository) UserUpdateSatelliteStatusById(id int) (*ds.Satellite, error
 	// Меняем статус тут
 	if Satellite.Status == "черновик" {
 		Satellite.Status = "в работе"
-		Satellite.DateCreate = time.Now()
+		Satellite.DateFormation = time.Now()
 	} else if Satellite.Status == "в работе" {
 		Satellite.Status = "отменен"
 	}
@@ -171,28 +171,39 @@ func (r *Repository) UserUpdateSatelliteStatusById(id int) (*ds.Satellite, error
 
 	return &Satellite, nil
 }
-func (r *Repository) ModerUpdateSatelliteStatusById(id int) (*ds.Satellite, error) {
-	var satellite ds.Satellite
-	result := r.db.First(&satellite, id)
+func (r *Repository) ModerUpdateSatelliteStatusById(id int, moderId uint) (*ds.Satellite, error) {
+	var Satellite ds.Satellite
+	var user ds.Users
+	r.db.Where("id = ?", moderId).First(&user)
+
+	result := r.db.First(&Satellite, id)
 	if result.Error != nil {
 		return nil, result.Error
 	}
 
 	// Меняем статус тут
-
-	if satellite.Status == "в работе" {
-		satellite.Status = "завершен"
-
-	} else if satellite.Status == "завершен" {
-		satellite.Status = "удален"
+	if Satellite.Status == "отменен" || Satellite.Status == "завершен" {
+		Satellite.Status = "удален"
+		Satellite.ModerID = moderId
+		Satellite.ModerLogin = user.UserName
+	} else if Satellite.Status == "в работе" {
+		Satellite.Status = "завершен"
+		Satellite.DateCompletion = time.Now()
+		Satellite.ModerID = moderId
+		Satellite.ModerLogin = user.UserName
+	} else if Satellite.Status != "удален" && Satellite.Status != "отменен" {
+		Satellite.Status = "отменен"
+		Satellite.ModerID = moderId
+		Satellite.ModerLogin = user.UserName
+		Satellite.DateCompletion = time.Now()
 	}
 
 	// Сохраняем изменения в базе данных
-	if err := r.db.Save(&satellite).Error; err != nil {
+	if err := r.db.Save(&Satellite).Error; err != nil {
 		return nil, err
 	}
 
-	return &satellite, nil
+	return &Satellite, nil
 }
 
 func (r *Repository) UsersUpdateSatellite(updatedSatellite *ds.Satellite, userid uint) error {

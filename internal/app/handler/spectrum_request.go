@@ -64,14 +64,13 @@ func (h *Handler) UpdateSpectrumNumberInRequest(ctx *gin.Context) {
 // @Failure 500 {object} errorResp "Внутренняя ошибка сервера"
 // @Router /SpectrumsRequests [post]
 func (h *Handler) AddSpectrumToRequest(ctx *gin.Context) {
-	//var spectrumRequest ds.spectrumsRequest
+	// Получение значения userid из контекста
 	userID, exists := ctx.Get("user_id")
 	if !exists {
 		// Обработка ситуации, когда userid отсутствует в контексте
 		h.errorHandler(ctx, http.StatusInternalServerError, errors.New("user_id not found in context"))
 		return
 	}
-
 	// Приведение типа, если необходимо
 	var userIDUint uint
 	switch v := userID.(type) {
@@ -90,15 +89,14 @@ func (h *Handler) AddSpectrumToRequest(ctx *gin.Context) {
 		h.errorHandler(ctx, http.StatusInternalServerError, errors.New("user_id is not of a supported type"))
 		return
 	}
-
+	//var SpectrumRequest ds.SpectrumsRequest
 	var request struct {
-		SpectrumId uint `json:"spectrum_id"`
+		SpectrumId uint `json:"Spectrum_id"`
 	}
 	if err := ctx.BindJSON(&request); err != nil {
 		h.errorHandler(ctx, http.StatusBadRequest, err)
 		return
 	}
-
 	if request.SpectrumId == 0 {
 		h.errorHandler(ctx, http.StatusBadRequest, SatelliteIDOrSpectrumIDIsEmpty)
 		return
@@ -109,7 +107,7 @@ func (h *Handler) AddSpectrumToRequest(ctx *gin.Context) {
 		return
 	}
 
-	h.successAddHandler(ctx, "updated_spectrum_request", request)
+	h.successAddHandler(ctx, "updated_Spectrum_request", request)
 }
 
 // DeleteSpectrumRequest godoc
