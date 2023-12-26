@@ -408,30 +408,16 @@ func (h *Handler) UserUpdateSatelliteStatusById(ctx *gin.Context) {
 // @Failure 500 {object} errorResp "Внутренняя ошибка сервера"
 // @Router /SatellitesModer/{id} [put]
 func (h *Handler) ModerUpdateSatelliteStatusById(ctx *gin.Context) {
-	moderID, exists := ctx.Get("user_id")
-	if !exists {
-		// Обработка ситуации, когда userid отсутствует в контексте
-		h.errorHandler(ctx, http.StatusInternalServerError, errors.New("moder_id not found in context"))
+	var requestData struct {
+		Status    string `json:"status"`
+		Modername string `json:"modername"`
+	}
+	if err := ctx.ShouldBindJSON(&requestData); err != nil {
+		h.errorHandler(ctx, http.StatusBadRequest, err)
 		return
 	}
-	// Приведение типа, если необходимо
-	var moderIDUint uint
-	switch v := moderID.(type) {
-	case uint:
-		moderIDUint = v
-	case int:
-		moderIDUint = uint(v)
-	case string:
-		i, err := strconv.Atoi(v)
-		if err != nil {
-			h.errorHandler(ctx, http.StatusInternalServerError, errors.New("failed to convert moder_id to uint"))
-			return
-		}
-		moderIDUint = uint(i)
-	default:
-		h.errorHandler(ctx, http.StatusInternalServerError, errors.New("moder_id is not of a supported type"))
-		return
-	}
+	status := requestData.Status
+	modername := requestData.Modername
 
 	id := ctx.Param("id")
 	idint, err := strconv.Atoi(id)
@@ -439,7 +425,7 @@ func (h *Handler) ModerUpdateSatelliteStatusById(ctx *gin.Context) {
 		h.errorHandler(ctx, http.StatusBadRequest, idNotFound)
 		return
 	}
-	result, err := h.Repository.ModerUpdateSatelliteStatusById(idint, moderIDUint)
+	result, err := h.Repository.ModerUpdateSatelliteStatusById(idint, modername, status)
 	if err != nil {
 		h.errorHandler(ctx, http.StatusInternalServerError, errors.New("can not refactor status"))
 		return
