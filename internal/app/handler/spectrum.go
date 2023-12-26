@@ -158,19 +158,15 @@ func (h *Handler) DeleteSpectrum(ctx *gin.Context) {
 // @Failure 500 {object} errorResp "Внутренняя ошибка сервера"
 // @Router /Spectrums [post]
 func (h *Handler) AddSpectrum(ctx *gin.Context) {
-	length := ctx.Request.FormValue("len")
-	freq := ctx.Request.FormValue("freq")
+	name := ctx.Request.FormValue("Spectrum_name")
 	description := ctx.Request.FormValue("description")
-	lengthfloat, _ := strconv.ParseFloat(length, 64)
-	freqfloat, _ := strconv.ParseFloat(freq, 64)
 
 	newSpectrum := ds.Spectrum{
 		IsDelete:    false,
 		Description: description,
-		Len:         lengthfloat,
-		Freq:        freqfloat,
+		Name:        name,
 	}
-	file, header, _ := ctx.Request.FormFile("image")
+	file, header, _ := ctx.Request.FormFile("image_url")
 	if errorCode, errCreate := h.createSpectrum(&newSpectrum); errCreate != nil {
 		h.errorHandler(ctx, errorCode, errCreate)
 	}
@@ -211,36 +207,33 @@ func (h *Handler) createSpectrum(Spectrum *ds.Spectrum) (int, error) {
 // @Failure 500 {object} errorResp "Внутренняя ошибка сервера"
 // @Router /Spectrums [put]
 func (h *Handler) UpdateSpectrum(ctx *gin.Context) {
-
-	spectrumId := ctx.Request.FormValue("id")
-	length := ctx.Request.FormValue("len")
-	freq := ctx.Request.FormValue("freq")
-	description := ctx.Request.FormValue("description")
-	lengthfloat, _ := strconv.ParseFloat(length, 64)
-	freqfloat, _ := strconv.ParseFloat(freq, 64)
-	spectrumIduint, _ := strconv.Atoi(spectrumId)
-
-	newSpectrum := ds.Spectrum{
-		ID:          uint(spectrumIduint),
-		IsDelete:    false,
-		Description: description,
-		Len:         lengthfloat,
-		Freq:        freqfloat,
+	var updatedSpectrum ds.Spectrum
+	if err := ctx.BindJSON(&updatedSpectrum); err != nil {
+		h.errorHandler(ctx, http.StatusBadRequest, err)
+		return
 	}
-	file, header, _ := ctx.Request.FormFile("image")
-	if errorCode, errCreate := h.updateSpectrum(&newSpectrum); errCreate != nil {
-		h.errorHandler(ctx, errorCode, errCreate)
-	}
-	if file != nil && header.Size != 0 && header != nil {
-		newImageURL, errCode, errDB := h.createImageSpectrum(&file, header, fmt.Sprintf("%d", newSpectrum.ID))
-		if errDB != nil {
-			h.errorHandler(ctx, errCode, errDB)
-			return
-		}
-		newSpectrum.Image = newImageURL
-	}
-	ctx.Redirect(http.StatusFound, "/Spectrums")
 
+	if updatedSpectrum.Image != "" {
+		h.errorHandler(ctx, http.StatusBadRequest, errors.New(`image_url must be empty`))
+		return
+	}
+
+	if updatedSpectrum.ID == 0 {
+		h.errorHandler(ctx, http.StatusBadRequest, idNotFound)
+		return
+	}
+	if err := h.Repository.UpdateSpectrum(&updatedSpectrum); err != nil {
+		h.errorHandler(ctx, http.StatusBadRequest, err)
+		return
+	}
+
+	h.successHandler(ctx, "updated_Spectrum", gin.H{
+		"id":          updatedSpectrum.ID,
+		"name":        updatedSpectrum.Name,
+		"is_delete":   updatedSpectrum.IsDelete,
+		"description": updatedSpectrum.Description,
+		"image_url":   updatedSpectrum.Image,
+	})
 }
 
 // asd=

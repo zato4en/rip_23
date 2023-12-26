@@ -68,6 +68,8 @@ func (h *Handler) Login(ctx *gin.Context) {
 			ExpiresIn:   cfg.JWT.ExpiresIn,
 			AccessToken: strToken,
 			TokenType:   "Bearer",
+			Role:        user.Role,
+			Username:    user.UserName,
 		})
 	}
 

@@ -52,8 +52,8 @@ func (r *Repository) UpdateSpectrum(updatedSpectrum *ds.Spectrum) error {
 	if updatedSpectrum.Description != "" {
 		oldSpectrum.Description = updatedSpectrum.Description
 	}
-	if updatedSpectrum.Description != "" {
-		oldSpectrum.Description = updatedSpectrum.Description
+	if updatedSpectrum.Name != "" {
+		oldSpectrum.Name = updatedSpectrum.Name
 	}
 	if updatedSpectrum.Len != 0 {
 		oldSpectrum.Len = updatedSpectrum.Len
@@ -66,9 +66,8 @@ func (r *Repository) UpdateSpectrum(updatedSpectrum *ds.Spectrum) error {
 	//	oldSpectrum.Image = updatedSpectrum.Image
 	//}
 
-	if updatedSpectrum.IsDelete != true {
-		oldSpectrum.IsDelete = updatedSpectrum.IsDelete
-	}
+	oldSpectrum.IsDelete = updatedSpectrum.IsDelete
+
 	*updatedSpectrum = oldSpectrum
 	result := r.db.Save(updatedSpectrum)
 	return result.Error
