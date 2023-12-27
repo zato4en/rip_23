@@ -171,6 +171,18 @@ func (r *Repository) UserUpdateSatelliteStatusById(id int) (*ds.Satellite, error
 
 	return &Satellite, nil
 }
+
+func (r *Repository) GetSatelliteStatusById(id int) string {
+	var Satellite ds.Satellite
+
+	r.db.First(&Satellite, id)
+	/*if result.Error != nil {
+		return nil
+	}*/
+
+	return Satellite.Status
+}
+
 func (r *Repository) ModerUpdateSatelliteStatusById(id int, modername string, status string) (*ds.Satellite, error) {
 	var Satellite ds.Satellite
 	var user ds.Users

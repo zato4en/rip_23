@@ -360,29 +360,30 @@ func (h *Handler) UserUpdateSatelliteStatusById(ctx *gin.Context) {
 		return
 	}
 
+	idint, _ := strconv.Atoi(id)
+	status := h.Repository.GetSatelliteStatusById(idint)
 	// Отправляем запрос на внешний сервис
-	resp, err := http.Post("http://localhost:8000/start-async-update/", "application/json", bytes.NewBuffer(requestBody))
-	if err != nil {
-		// Обработка ошибки выполнения запроса
-		ctx.String(http.StatusInternalServerError, "Error sending request to the external service: %v", err)
-		return
-	}
-	defer resp.Body.Close()
 
-	// Проверяем статус ответа
-	if resp.StatusCode != http.StatusOK {
-		// Обработка случая, когда внешний сервис вернул ошибку
-		ctx.String(resp.StatusCode, "External service returned: %s", resp.Status)
-		return
-	}
+	if status == "черновик" {
+		resp, err := http.Post("http://localhost:8000/start-async-update/", "application/json", bytes.NewBuffer(requestBody))
+		if err != nil {
+			// Обработка ошибки выполнения запроса
+			ctx.String(http.StatusInternalServerError, "Error sending request to the external service: %v", err)
+			return
+		}
+		defer resp.Body.Close()
 
-	// Все хорошо, возвращаем HTTP статус 200 OK
+		// Проверяем статус ответа
+		if resp.StatusCode != http.StatusOK {
+			// Обработка случая, когда внешний сервис вернул ошибку
+			ctx.String(resp.StatusCode, "External service returned: %s", resp.Status)
+			return
+		}
+
+		// Все хорошо, возвращаем HTTP статус 200 OK
+	}
 	ctx.Status(http.StatusOK)
-	idint, err := strconv.Atoi(id)
-	if err != nil {
-		h.errorHandler(ctx, http.StatusBadRequest, idNotFound)
-		return
-	}
+
 	result, err := h.Repository.UserUpdateSatelliteStatusById(idint)
 	if err != nil {
 		h.errorHandler(ctx, http.StatusInternalServerError, errors.New("can not refactor status"))
