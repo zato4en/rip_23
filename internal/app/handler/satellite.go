@@ -95,6 +95,7 @@ func (h *Handler) SatellitesList(ctx *gin.Context) {
 				DateCreate:     Satellite.DateCreate,
 				DateFormation:  Satellite.DateFormation,
 				DateCompletion: Satellite.DateCompletion,
+				Satellite:      Satellite.Satellite,
 				Status:         Satellite.Status,
 				ModerLogin:     Satellite.ModerLogin,
 				UserLogin:      Satellite.UserLogin,
