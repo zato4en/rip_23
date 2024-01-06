@@ -1,5 +1,5 @@
 --
-INSERT INTO users (user_name, login, password, role) VALUES ('admin','admin', '1', 2);
+-- INSERT INTO users (user_name, login, password, role) VALUES ('admin','admin', '1', 2);
 -- INSERT INTO users (login, password, is_admin) VALUES ('user4', 'admin', true);
 -- INSERT INTO users (login, password, is_admin) VALUES ('user2', 'user2', false);
 -- INSERT INTO users (login, password, is_admin) VALUES ('user3', 'user3',false);

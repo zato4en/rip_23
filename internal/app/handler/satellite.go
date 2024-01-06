@@ -350,44 +350,41 @@ func (h *Handler) UsersUpdateSatellite(ctx *gin.Context) {
 // @Router /SatellitesUser/{id} [put]
 func (h *Handler) UserUpdateSatelliteStatusById(ctx *gin.Context) {
 	id := ctx.Param("id")
-
-	// Создаем структуру для запроса
-	requestBody, err := json.Marshal(map[string]string{
-		"satellite_id": id,
-	})
+	idint, err := strconv.Atoi(id)
 	if err != nil {
-		// Обработка ошибки маршалинга JSON
-		ctx.String(http.StatusInternalServerError, "Error creating request body: %v", err)
+		ctx.String(http.StatusBadRequest, "Invalid satellite ID: %v", err)
 		return
 	}
 
-	idint, _ := strconv.Atoi(id)
 	status := h.Repository.GetSatelliteStatusById(idint)
-	// Отправляем запрос на внешний сервис
-
 	if status == "черновик" {
+		// Создаем структуру для запроса
+		requestBody, err := json.Marshal(map[string]string{
+			"satellite_id": id,
+		})
+		if err != nil {
+			ctx.String(http.StatusInternalServerError, "Error creating request body: %v", err)
+			return
+		}
+
+		// Отправляем запрос на внешний сервис
 		resp, err := http.Post("http://localhost:8000/start-async-update/", "application/json", bytes.NewBuffer(requestBody))
 		if err != nil {
-			// Обработка ошибки выполнения запроса
 			ctx.String(http.StatusInternalServerError, "Error sending request to the external service: %v", err)
-			return
+			// Здесь не делается return, чтобы изменить статус независимо от ошибки запроса
+		} else {
+			defer resp.Body.Close()
+			if resp.StatusCode != http.StatusOK {
+				ctx.String(resp.StatusCode, "External service returned: %s", resp.Status)
+				// Здесь не делается return, чтобы изменить статус независимо от статуса ответа
+			}
 		}
-		defer resp.Body.Close()
-
-		// Проверяем статус ответа
-		if resp.StatusCode != http.StatusOK {
-			// Обработка случая, когда внешний сервис вернул ошибку
-			ctx.String(resp.StatusCode, "External service returned: %s", resp.Status)
-			return
-		}
-
-		// Все хорошо, возвращаем HTTP статус 200 OK
 	}
-	ctx.Status(http.StatusOK)
 
+	// Обновляем статус независимо от результатов запроса к внешнему сервису
 	result, err := h.Repository.UserUpdateSatelliteStatusById(idint)
 	if err != nil {
-		h.errorHandler(ctx, http.StatusInternalServerError, errors.New("can not refactor status"))
+		h.errorHandler(ctx, http.StatusInternalServerError, errors.New("can not update status"))
 		return
 	}
 
