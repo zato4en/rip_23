@@ -5,6 +5,9 @@ import (
 )
 
 type Satellite struct {
+	//Когда миграции создают GORM, для некоторых типов данных надо
+	//добавить ограничения
+	//JSON мы указываем для обращения к полям структуры извне через JSON запросы
 	ID           uint      `json:"id" gorm:"primaryKey"`
 	DateCreated  time.Time `json:"date_created"`
 	DateFormed   time.Time `json:"date_formed"`

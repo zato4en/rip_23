@@ -5,6 +5,10 @@ import (
 	"net/http"
 )
 
+//Этот файл - описание методов сущности (услуг) на уровне хендлера
+
+//Метод вывода всех услуг
+
 func (h *Handler) SpectrumList(ctx *gin.Context) {
 	spectrumName := ctx.Query("search")
 	if spectrumName == "" {
@@ -31,6 +35,8 @@ func (h *Handler) SpectrumList(ctx *gin.Context) {
 
 	}
 }
+
+//Метод
 
 func (h *Handler) SpectrumById(ctx *gin.Context) {
 	id := ctx.Param("id")

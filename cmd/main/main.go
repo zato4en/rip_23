@@ -18,15 +18,20 @@ func main() {
 	if err != nil {
 		logger.Fatalf("Error with configuration reading: %s", err)
 	}
+	//Мы используем метод DSN, чтобы распарсить env и запихнуть его в переменную
 	postgresString, errPost := dsn.FromEnv()
 	if errPost != nil {
 		logger.Fatalf("Error of reading postgres line: %s", errPost)
 	}
 	fmt.Println(postgresString)
+
+	//сначала мы инициализируем наш репозиторий (нижний уровень)
 	rep, errRep := repository.NewRepository(postgresString, logger)
 	if errRep != nil {
 		logger.Fatalf("Error from repository: %s", err)
 	}
+
+	//Инициализируем хендлер (уровень выше)
 	hand := handler.NewHandler(logger, rep)
 	application := pkg.NewApp(conf, router, logger, hand)
 	application.RunApp()

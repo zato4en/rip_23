@@ -25,6 +25,7 @@ func NewConfig(ctx *log.Logger) (*Config, error) {
 		configName = os.Getenv("CONFIG_NAME")
 	}
 
+	//Описываем файл конфигурации
 	viper.SetConfigName(configName)
 	viper.SetConfigType("toml")
 	viper.AddConfigPath("config")
@@ -36,6 +37,7 @@ func NewConfig(ctx *log.Logger) (*Config, error) {
 		return nil, err
 	}
 
+	//Тут происходит распарс файла config.toml
 	cfg := &Config{}
 	err = viper.Unmarshal(cfg)
 	if err != nil {

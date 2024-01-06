@@ -6,10 +6,14 @@ import (
 	"rip2023/internal/app/repository"
 )
 
+// инициализируем структуру репы - логгер и репу
+
 type Handler struct {
 	Logger     *logrus.Logger
 	Repository *repository.Repository
 }
+
+//Функция, создающая новый хендлер
 
 func NewHandler(l *logrus.Logger, r *repository.Repository) *Handler {
 	return &Handler{
@@ -19,6 +23,7 @@ func NewHandler(l *logrus.Logger, r *repository.Repository) *Handler {
 }
 
 // эндпоинты
+
 func (h *Handler) RegisterHandler(router *gin.Engine) {
 	router.GET("/", h.SpectrumList)
 	router.GET("/Spectrum/:id", h.SpectrumById)
@@ -34,6 +39,7 @@ func registerStatic(router *gin.Engine) {
 	router.Static("/img", "./static")
 }
 
+// ошибки
 func (h *Handler) errorHandler(ctx *gin.Context, errorStatusCode int, err error) {
 	h.Logger.Error(err.Error())
 	ctx.JSON(errorStatusCode, gin.H{
