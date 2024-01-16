@@ -7,3 +7,5 @@ type Spectrum struct {
 	Description string
 	Image       string
 }
+
+//
