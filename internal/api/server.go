@@ -15,21 +15,16 @@ func StartServer() {
 	r.Static("/resources", "./resources")
 	r.Static("/static", "./static")
 
+	//МОКИ ЗДЕСЬ
 	Spectrums := []rip2023.Spectrum{
-		{1, "Абоба", []float32{1, 2, 3}, "ПЕРЕДЕЛАТЬ.\n",
+		{1, "CMB1", []float32{1, 2, 3}, "Описание спектра 1\n",
 			"relict.jpeg"},
-		{2, "12", []float32{1, 2, 3}, "ПЕРЕДЕЛАТЬ\n",
+		{2, "CMB2", []float32{1, 2, 3}, "Описание спектра 2\n",
 			"IRB.jpeg"},
-		{3, "Проверка", []float32{1, 2, 3}, "ПЕРЕДЕЛАТЬ\n",
+		{3, "CMB3", []float32{1, 2, 3}, "Описание спектра 3\n",
 			"xrb.jpeg"},
 	}
 
-	//r.GET("/:search", func(c *gin.Context) {
-	//	r.SetHTMLTemplate(template.Must(template.ParseFiles("./templates/mainpage.html")))
-	//	c.HTML(http.StatusOK, "mainpage.html", gin.H{
-	//		"Spectrum": Spectrums,
-	//	})
-	//})
 	r.GET("/", func(c *gin.Context) {
 		searchQuery := c.Query("search")
 
@@ -63,20 +58,6 @@ func StartServer() {
 			"Spectrum": selectedSpectrum,
 		})
 	})
-
-	//r.GET("/search", func(c *gin.Context) {
-	//	searchQuery := c.Query("search")
-	//
-	//	filteredSpectrum := []rip2023.Spectrum{}
-	//	for _, c := range Spectrums {
-	//		if strings.Contains(strings.ToLower(c.Name), strings.ToLower(searchQuery)) {
-	//			filteredSpectrum = append(filteredSpectrum, c)
-	//		}
-	//	}
-	//	c.HTML(http.StatusOK, "mainpage.html", gin.H{
-	//		"Spectrum": filteredSpectrum,
-	//	})
-	//})
 
 	r.Run(":8080")
 }
