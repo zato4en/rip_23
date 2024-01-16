@@ -53,7 +53,7 @@ func StartServer() {
 				break
 			}
 		}
-
+		//
 		c.HTML(http.StatusOK, "spectrum.html", gin.H{
 			"Spectrum": selectedSpectrum,
 		})
