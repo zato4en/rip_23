@@ -18,16 +18,13 @@ func (r *Repository) SpectrumList() (*[]ds.Spectrum, error) {
 }
 
 // поиск по спектрам
+//ПЕРЕДЕЛАЛ НА ОРМ
 
 func (r *Repository) SearchSpectrum(search string) (*[]ds.Spectrum, error) {
-	var Spectrum []ds.Spectrum
-	r.db.Find(&Spectrum)
-
 	var filteredSpectrum []ds.Spectrum
-	for _, Spectrum := range Spectrum {
-		if strings.Contains(strings.ToLower(Spectrum.Description), strings.ToLower(search)) {
-			filteredSpectrum = append(filteredSpectrum, Spectrum)
-		}
+	search = "%" + strings.ToLower(search) + "%"
+	if err := r.db.Where("LOWER(description) LIKE ?", search).Find(&filteredSpectrum).Error; err != nil {
+		return nil, err
 	}
 
 	return &filteredSpectrum, nil
