@@ -1,4 +1,4 @@
-ServiceHost = "localhost"
+ServiceHost = "192.168.50.209"
 ServicePort = 8888
 
 # НАСТРОЙКИ РЕДИСКИ

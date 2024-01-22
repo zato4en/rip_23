@@ -68,7 +68,6 @@ func (h *Handler) SatelliteCRUD(router *gin.Engine) {
 func (h *Handler) SpectrumsRequestsCRUD(router *gin.Engine) {
 	router.POST("/SpectrumsRequests", h.WithIdCheck(role.Buyer, role.Manager, role.Admin), h.AddSpectrumToRequest)
 	router.DELETE("/SpectrumsRequests", h.WithAuthCheck(role.Buyer, role.Manager, role.Admin), h.DeleteSpectrumRequest)
-	router.PUT("/SpectrumsRequests", h.WithAuthCheck(role.Buyer, role.Manager, role.Admin), h.UpdateSpectrumNumberInRequest)
 	router.GET("/ping", h.WithAuthCheck(role.Manager, role.Admin), h.Ping)
 }
 
